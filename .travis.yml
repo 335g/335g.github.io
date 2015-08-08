@@ -46,9 +46,9 @@ script:
   - ./site build
                                                                               
 after_success:
+  - cd _site
   - export REMOTE=$(git config remote.origin.url | sed 's/.*:\/\///')
   - git remote add github https://${GH_TOKEN}@${REMOTE}
-  - cd _site
   - git add ./*
   - git status
   - git commit -m "Built by Travis (build $TRAVIS_BUILD_NUMBER)"
