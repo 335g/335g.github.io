@@ -17,12 +17,13 @@ env:
     - secure: "0qIA6PuKLTh2lrTHICknwUgiuiBEwgyZUy8zGMhuF1SIcFtnHmnAXMpO9rYTJFtkr6PyGGc0IB2xrF9P2GsC7f3TEmqyRZVOjR9HNB2h32QxwD/rVGcVudFzYR2/YGBt5ogSI9CL+RP364OqXubd94N0Q7SUaB6CTWVd0XBr5WtTZG4DiTTNeaX1EVhe5ACWIEsxCV1TMngP1nqfgdAutGER3GtJ722a+dWQ+DLJ8rzdYkW6Jp7IFkUY+SaFd5ndrv5qGsHGrAO4N9HSweqJqZqpulOeOJ+0v2kApGJNIGYosP8JWMeTyt0n7VZ4Q1hVWGpePvX33iV2Zk1heBjQMQpWsHEvMOcrW5v7qsBaZEpRBf5OdM/74ruWglelvk5dCJZLYYVDSAfGYn9eJZeoqC66ZSn8SLn1F2kTfnmXwtQ09X/VuH8VWu1vE1eONqtC7R17l2q4X546s9bFzOQY+2wVrZpjIKV9l8KElAMv57hzJcQgJbgw8YFkFFG9ylfoNpjOePWJInx3WO/RQrvX8eOuc7mrcLoFpklQF3DZXhb80YRRIDO2MGrRMkSx5GWmJnJa5PkNjpvGPRDfJArbnfjBZvLnl6LIeo4L0hsQQrgZIyB2maszB7v/S7w8+rqwnGHG6vSmPCrn5A/69N6neJWvuEGLQMP/qxCK+KPp66I=" # email
 
 before_install:
+  - git submodule foreach --recursive 'git checkout master; git ls-files | grep -v README | grep -v CNAME | xargs -r git rm'
   - mkdir -p ~/.local/bin
   - export PATH=~/.local/bin:$PATH
   - travis_retry curl -L https://github.com/commercialhaskell/stack/releases/download/v0.1.2.0/stack-0.1.2.0-x86_64-linux.gz | gunzip > ~/.local/bin/stack
   - chmod a+x ~/.local/bin/stack
   - export PATH=~/opt/ghc/7.8.4/bin:$PATH
-  - git submodule foreach --recursive 'git checkout master; git ls-files | grep -v README | grep -v CNAME | xargs -r git rm'
+    #  - git submodule foreach --recursive 'git checkout master; git ls-files | grep -v README | grep -v CNAME | xargs -r git rm'
 
 addons:
   apt:
