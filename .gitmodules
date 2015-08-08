@@ -1,0 +1,3 @@
+[submodule "weblog/_site"]
+	path = weblog/_site
+	url = https://github.com/335g/335g.github.io.git
