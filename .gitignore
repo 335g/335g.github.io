@@ -1,4 +1,6 @@
 .DS_Store
 weblog/_site
 weblog/_cache
-
+weblog/site*
+!weblog/site.hs
+.stack-work
