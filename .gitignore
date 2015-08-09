@@ -1,4 +1,7 @@
 .DS_Store
-weblog/_site
-weblog/_cache
-
+_site
+_cache
+weblog/site.o
+weblog/site.hi
+weblog/site
+.stack-work
