@@ -14,7 +14,7 @@ title: Hakyll × stack × Travis CI × Github でブログを書く
 ## [Stack](https://github.com/commercialhaskell/stack)
 
 Haskellのパッケージをビルドしたりインストールしたりするツールです。
-[@tanakh](https://twitter.com/tanakh)さんによる
+[tanakh](https://twitter.com/tanakh)さんによる
 [紹介記事](http://qiita.com/tanakh/items/6866d0f570d0547df026)をきっかけに知りました。
 Haskell力のない自分にはcabal hellを乗り越えられる自信が無かったという理由と、
 タイムリーなので使ってみたいという理由から選択してみました。
