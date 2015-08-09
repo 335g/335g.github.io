@@ -5,6 +5,19 @@ import           Hakyll
 
 
 --------------------------------------------------------------------------------
+--
+-- match :: Pattern -> Rules () -> Rules ()
+-- route :: Routes -> Rules ()
+-- compile :: (Binary a, Typeable a, Writable a) => Compiler (Item a) -> Rules ()
+-- compressCssCompiler :: Compiler (Item String)
+-- pandocCompiler :: Compiler (Item String)
+-- copyFileCompiler :: Compiler (Item CopyFile)
+-- loadAndApplyTemplate :: Identifier -> Context a -> Item a -> Compiler (Item String)
+--  ex. loadAndApplyTemplate "templates/post.html" postCtx :: Item String -> Compiler (Item String)
+--
+-- loadAll :: (Binary a, Typeable a) => Pattern -> Compiler [Item a]
+-- recentFirst :: MonadMetadata m => [Item a] -> m [Item a]
+
 main :: IO ()
 main = hakyll $ do
     match "images/*" $ do
@@ -40,6 +53,8 @@ main = hakyll $ do
 
 
 --------------------------------------------------------------------------------
+-- dateField :: String -> String -> Context a
+-- defaultContext :: Context String
 postCtx :: Context String
 postCtx =
     dateField "date" "%B %e, %Y" `mappend`
