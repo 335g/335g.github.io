@@ -6,3 +6,4 @@ weblog/site*
 .stack-work
 weblog/css/skeleton/*
 !weblog/css/skeleton/*.css
+!weblog/css/*.css

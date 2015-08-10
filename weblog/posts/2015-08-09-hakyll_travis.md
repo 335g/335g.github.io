@@ -1,5 +1,7 @@
 ---
-title: Hakyll × stack × Travis CI × Github でブログを書く
+title: Github Pages でブログを書いていきます
+description: Hakyll × stack × Travis CI × Github でブログを書く
+tags: Haskell, Hakyll, stack, Travis
 ---
 
 やった事をまとめると、以下の通り。
