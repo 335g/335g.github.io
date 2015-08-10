@@ -1,13 +1,9 @@
-<ul>
   $for(posts)$
-  <li>
     <div class="post-title-date">
       <span class="post-title">
-        "
-        <a href="$url$">$title$</a>
-        "
+        "<a href="$url$">$title$</a>"
       </span>
-      <span class="date">
+      <span class="posted-date">
         - $date$
       </span>
     </div>
@@ -15,6 +11,4 @@
     <div class="post-description">
       $description$
     </div>
-  </li>
   $endfor$
-</ul>

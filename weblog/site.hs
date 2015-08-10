@@ -21,38 +21,37 @@ main = hakyll $ do
         route $ setExtension ".html"
         compile $ do
             pandocCompiler
-                >>= loadAndApplyTemplate "templates/post.html" (postCtx tags)
-                >>= loadAndApplyTemplate "templates/default.html" (postCtx tags)
+                >>= loadAndApplyTemplate "templates/post.html" (postCtxWith tags)
+                >>= loadAndApplyTemplate "templates/default.html" (postCtxWith tags)
                 >>= relativizeUrls
 
     --
     tagsRules tags $ \tag pattern -> do
-        let title = "Posts \"" ++ tag ++ "\""
+        let pageTitle = "Posts \"" ++ tag ++ "\""
 
         -- copied from posts
         route idRoute
         compile $ do
             posts <- recentFirst =<< loadAll pattern
-            let ctx = constField "title" title <>
-                        listField "posts" (postCtx tags) (return posts) <>
+            let ctx = constField "pageTitle" pageTitle <>
+                        listField "posts" (postCtxWith tags) (return posts) <>
                         defaultContext
 
             makeItem ""
-                >>= loadAndApplyTemplate "templates/post-list.html" ctx
+                >>= loadAndApplyTemplate "templates/posts.html" ctx
                 >>= loadAndApplyTemplate "templates/default.html" ctx
                 >>= relativizeUrls
 
-    match "index.html" $ do
+    create ["index.html"] $ do
         route idRoute
         compile $ do
             posts <- recentFirst =<< loadAll "posts/*"
             let indexCtx =
-                    listField "posts" (postCtx tags) (return posts) <>
-                    field "tags" (\_ -> renderTagList tags) <>
+                    listField "posts" postCtx (return posts) `mappend`
                     defaultContext
 
-            getResourceBody
-                >>= applyAsTemplate indexCtx
+            makeItem ""
+                >>= loadAndApplyTemplate "templates/posts.html" indexCtx
                 >>= loadAndApplyTemplate "templates/default.html" indexCtx
                 >>= relativizeUrls
 
@@ -60,11 +59,15 @@ main = hakyll $ do
 
 
 --------------------------------------------------------------------------------
-postCtx :: Tags -> Context String
-postCtx tags = mconcat
+postCtxWith :: Tags -> Context String
+postCtxWith tags = mconcat
     [ dateField "date" "%B %e, %Y"
     , tagsField "tags" tags
     , defaultContext
     ]
 
-
+postCtx :: Context String
+postCtx = mconcat
+    [ dateField "date" "%B %e, %Y"
+    , defaultContext
+    ]

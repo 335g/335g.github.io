@@ -17,6 +17,10 @@
 .mt1 { margin-top: 1rem; }
 .mt2 { margin-top: 2rem; }
 .mt3 { margin-top: 3rem; }
+.mt4 { margin-top: 4rem; }
+.mt5 { margin-top: 5rem; }
+.mt6 { margin-top: 6rem; }
+.mt7 { margin-top: 7rem; }
 
 div { display: block; }
 
@@ -53,3 +57,30 @@ footer {
   border-top: thin solid #F0F0F0;
 }
 
+#contents {
+  padding: 3rem 3rem 1rem;
+}
+
+.post-title {
+  font-style: normal;
+  font-size: 2.0rem;
+  font-weight: 700;
+}
+
+.post-title a:link { color: #000000; }
+.post-title a:visited { color: #000000; }
+.post-title a:hover { color: #000000; }
+.post-title a:active { color: #000000; }
+
+.posted-date {
+  font-style: italic;
+  font-size: 1.4rem;
+  font-weight: 400;
+}
+
+.post-description {
+  font-style: normal;
+  font-size: 1.4rem;
+  font-weight: 400;
+  padding-left: 2.7rem;
+}
