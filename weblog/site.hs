@@ -15,6 +15,10 @@ main = hakyll $ do
         route   idRoute
         compile compressCssCompiler
 
+    match ("js/highlight/*" .||. "js/highlight/styles/*") $ do
+        route   idRoute
+        compile copyFileCompiler
+
     tags <- buildTags "posts/*" (fromCapture "tags/*.html")
 
     match ("posts/*") $ do

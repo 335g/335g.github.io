@@ -3,10 +3,26 @@
 #header a:visited { color: #000000; text-decoration: none; }
 #header a:hover { color: #000000; text-decoration: none; }
 #header a:active { color: #000000; text-decoration: none; }
+
 #footer a:link { color: #909090; text-decoration: none; }
 #footer a:visited { color: #909090; text-decoration: none; }
 #footer a:hover { color: #909090; text-decoration: none; }
 #footer a:active { color: #909090; text-decoration: none; }
+
+.post-title a:link { color: #000000; }
+.post-title a:visited { color: #000000; }
+.post-title a:hover { color: #000000; }
+.post-title a:active { color: #000000; }
+
+div { display: block; }
+
+html, body {
+  height: 100%;
+}
+
+body {
+  background-color: #FFFFFF;
+}
 
 .p1 { padding: 1rem; }
 .p2 { padding: 2rem; }
@@ -22,65 +38,91 @@
 .mt6 { margin-top: 6rem; }
 .mt7 { margin-top: 7rem; }
 
-div { display: block; }
-
-html, body {
-  height: 100%;
-}
-
-body {
-  background-color: #FFFFFF;
-}
-
 #site-wrap {
   min-height: 100%;
-  margin-bottom: -100px;
 }
 
-footer, .site-wrap:after {
-  height: 100px;
-  background-color: #FAFAFA;
-}
-
-.wrap {
-  margin-left: auto;
-  margin-right: auto;
-}
-
-footer, footer .wrap {
-  background-color: #FAFAFA;
-  text-align: center;
-  color: #909090;
+#site-wrap:after {
+  content: "";
+  display: block;
 }
 
 footer {
+  background-color: #FAFAFA;
+  text-align: center;
+  color: #909090;
   border-top: thin solid #F0F0F0;
-}
-
-#contents {
-  padding: 3rem 3rem 1rem;
 }
 
 .post-title {
   font-style: normal;
-  font-size: 2.0rem;
   font-weight: 700;
 }
 
-.post-title a:link { color: #000000; }
-.post-title a:visited { color: #000000; }
-.post-title a:hover { color: #000000; }
-.post-title a:active { color: #000000; }
-
 .posted-date {
   font-style: italic;
-  font-size: 1.4rem;
   font-weight: 400;
 }
 
 .post-description {
   font-style: normal;
-  font-size: 1.4rem;
   font-weight: 400;
-  padding-left: 2.7rem;
 }
+
+/** responsive **/
+
+@media (min-width:  300px){ 
+  #footer .contents{ font-size: 2.0rem; padding: 7.0rem 1.0rem; }
+  #site-wrap{ margin-bottom: -200px; }
+  footer, #site-wrap:after{ height: 200px; }
+  #contents{ padding: 5.0rem 0.5rem 2.0rem; }
+  .post-title { font-size: 2.0rem; }
+  .posted-date { font-size: 1.4rem; }
+  .post-description { font-size: 1.4rem; padding-left: 2.7rem; }
+}
+@media (min-width:  400px){ 
+  #footer .contents{ font-size: 1.8rem; padding: 6.0rem 1.5rem; }
+  #site-wrap{ margin-bottom: -180px; }
+  footer, #site-wrap:after{ height: 180px; }
+  #contents{ padding: 5.0rem 1.0rem 2.0rem; }
+  .post-title { font-size: 2.0rem; }
+  .posted-date { font-size: 1.4rem; }
+  .post-description { font-size: 1.4rem; padding-left: 2.7rem; }
+}
+@media (min-width:  550px){ 
+  #footer .contents{ font-size: 1.6rem; padding: 5.0rem 1.8rem; }
+  #site-wrap{ margin-bottom: -150px; }
+  footer, #site-wrap:after{ height: 150px; }
+  #contents{ padding: 5.0rem 2.0rem 2.0rem; }
+  .post-title { font-size: 2.0rem; }
+  .posted-date { font-size: 1.4rem; }
+  .post-description { font-size: 1.4rem; padding-left: 2.7rem; }
+}
+@media (min-width:  750px){ 
+  #footer .contents{ font-size: 1.5rem; padding: 4.0rem 2.0rem; }
+  #site-wrap{ margin-bottom: -120px; }
+  footer, #site-wrap:after{ height: 120px; }
+  #contents{ padding: 5.0rem 5.0rem 2.0rem; }
+  .post-title { font-size: 2.0rem; }
+  .posted-date { font-size: 1.4rem; }
+  .post-description { font-size: 1.4rem; padding-left: 2.7rem; }
+}
+@media (min-width: 1000px){ 
+  #footer .contents{ font-size: 1.5rem; padding: 4.0rem 2.0rem; }
+  #site-wrap{ margin-bottom: -120px; }
+  footer, #site-wrap:after{ height: 120px; }
+  #contents{ padding: 5.0rem 5.0rem 2.0rem; }
+  .post-title { font-size: 2.0rem; }
+  .posted-date { font-size: 1.4rem; }
+  .post-description { font-size: 1.4rem; padding-left: 2.7rem; }
+}
+@media (min-width: 1200px){ 
+  #footer .contents{ font-size: 1.5rem; padding: 4.0rem 2.0rem; }
+  #site-wrap{ margin-bottom: -120px; }
+  footer, #site-wrap:after{ height: 120px; }
+  #contents{ padding: 5.0rem 5.0rem 2.0rem; }
+  .post-title { font-size: 2.0rem; }
+  .posted-date { font-size: 1.4rem; }
+  .post-description { font-size: 1.4rem; padding-left: 2.7rem; }
+}
+
