@@ -1,6 +1,6 @@
 ---
-title: Github Pages でブログを始めます
-description: Hakyll, stack, Travis CI, Github でブログを管理する
+title: Hakyll, stack, Travis CI, Github でブログを管理する
+description: それぞれの初期設定
 tags: Haskell, Hakyll, stack, Travis
 ---
 

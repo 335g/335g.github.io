@@ -19,7 +19,11 @@ div {
 }
 
 html {
-  font-size: 10px;
+  font-size: 1.0rem;
+}
+
+body {
+  font-size: 1.5rem;
 }
 
 html, body {
@@ -28,6 +32,9 @@ html, body {
 
 body {
   background-color: #FFFFFF;
+  box-sizing: border-box;
+  -webkig-box-sizing: border-box;
+  -moz-box-sizing: border-box;
 }
 
 .p1 { padding: 1rem; }
@@ -67,7 +74,8 @@ footer {
 
 .posted-date {
   font-style: italic;
-  font-weight: 400;
+  font-weight: 300;
+  color: #909090;
 }
 
 .post-description {
@@ -81,71 +89,35 @@ footer {
 
 
 /*
- * iPhone5s :320px, iPhone6 :375px
+ * iPhone5s :320px, iPhone6 :375px, iPhone6+: 414px
  */
-@media screen and (min-width: 320px) and (max-width: 413px){ 
-  body { font-size: 2.0rem; }
-  #footer .contents{ font-size: 2.0rem; padding: 4.25rem 0.0rem; }
+@media screen and (min-width: 320px) and (max-width: 549px){ 
+  #footer .contents{ font-size: 1.5rem; padding: 4.25rem 0.0rem; }
   #site-wrap{ margin-bottom: -15.0rem; }
   footer, #site-wrap:after{ height: 15.0rem; }
-  #contents{ padding: 5.0rem 0.5rem 2.0rem; }
-  .post-title { font-size: 2.0rem; }
-  .posted-date { font-size: 1.4rem; }
-  .post-description { font-size: 1.4rem; padding-left: 2.7rem; }
+  #contents{ padding: 3.0rem 1.0rem 2.0rem; }
+  h3.post-title { font-size: 2.0rem; margin-bottom: 0.5rem; padding-right: 1.5rem; }
+  .posted-date { font-size: 1.0rem; }
+  .post-description { font-size: 1.125rem; padding: 0.0rem 0.0rem 2.0rem 2.7rem; }
 }
 
-/*
- * iPhone6+ :414px
- */
-@media screen and (min-width: 414px) and (max-width: 549px) { 
-  body { font-size: 1.6rem; }
-  #footer .contents{ font-size: 2.0rem; padding: 4.25rem 0.0rem; }
+@media screen (min-width: 550px){ 
+  #footer .contents{ font-size: 1.5rem; padding: 4.25rem 0.0rem; }
   #site-wrap{ margin-bottom: -15.0rem; }
   footer, #site-wrap:after{ height: 15.0rem; }
-  #contents{ padding: 5.0rem 1.0rem 2.0rem; }
-  .post-title { font-size: 2.0rem; }
-  .posted-date { font-size: 1.4rem; }
-  .post-description { font-size: 1.4rem; padding-left: 2.7rem; }
+  #contents{ padding: 3.0rem 1.0rem 2.0rem }
+  h3.post-title { font-size: 2.0rem; margin-bottom: 0.5rem; padding-right: 1.5rem; }
+  .posted-date { font-size: 1.0rem; }
+  .post-description { font-size: 1.125rem; padding: 0.0rem 0.0rem 2.0rem 2.7rem; }
 }
 
-@media (min-width: 550px){ 
-  body { font-size: 1.4rem; }
-  #footer .contents{ font-size: 2.0rem; padding: 4.25rem 0.0rem; }
-  #site-wrap{ margin-bottom: -15.0rem; }
-  footer, #site-wrap:after{ height: 15.0rem; }
-  #contents{ padding: 5.0rem 2.0rem 2.0rem; }
-  .post-title { font-size: 2.0rem; }
-  .posted-date { font-size: 1.4rem; }
-  .post-description { font-size: 1.4rem; padding-left: 2.7rem; }
-}
-@media (min-width: 750px){ 
-  body { font-size: 1.2rem; }
+@media screen (min-width: 750px){ 
   #footer .contents{ font-size: 1.4rem; padding: 4.3rem 0.0rem; }
   #site-wrap{ margin-bottom: -10.0rem; }
   footer, #site-wrap:after{ height: 10.0rem; }
-  #contents{ padding: 5.0rem 5.0rem 2.0rem; }
-  .post-title { font-size: 2.0rem; }
-  .posted-date { font-size: 1.4rem; }
-  .post-description { font-size: 1.4rem; padding-left: 2.7rem; }
-}
-@media (min-width: 1000px){ 
-  body { font-size: 1.2rem; }
-  #footer .contents{ font-size: 1.4rem; padding: 4.3rem 0.0rem; }
-  #site-wrap{ margin-bottom: -10.0rem; }
-  footer, #site-wrap:after{ height: 10.0rem; }
-  #contents{ padding: 5.0rem 5.0rem 2.0rem; }
-  .post-title { font-size: 2.0rem; }
-  .posted-date { font-size: 1.4rem; }
-  .post-description { font-size: 1.4rem; padding-left: 2.7rem; }
-}
-@media (min-width: 1200px){ 
-  body { font-size: 1.2rem; }
-  #footer .contents{ font-size: 1.4rem; padding: 4.3rem 0.0rem; }
-  #site-wrap{ margin-bottom: -10.0rem; }
-  footer, #site-wrap:after{ height: 10.0rem; }
-  #contents{ padding: 5.0rem 5.0rem 2.0rem; }
-  .post-title { font-size: 2.0rem; }
-  .posted-date { font-size: 1.4rem; }
-  .post-description { font-size: 1.4rem; padding-left: 2.7rem; }
+  #contents{ padding: 3.0rem 5.0rem 2.0rem; }
+  h3.post-title { font-size: 2.0rem; margin-bottom: 0.5rem; padding-right: 1.5rem; }
+  .posted-date { font-size: 1.0rem; }
+  .post-description { font-size: 1.125rem; padding: 0.0rem 0.0rem 2.0rem 2.7rem; }
 }
 
