@@ -37,26 +37,26 @@
 <li>ソースファイルはGithubの公開リポジトリで管理し、Github Pagesで公開する。</li>
 </ul>
 <p>できたのが<a href="https://github.com/335g/335g.github.io">これ</a>。</p>
-<h2 id="stack"><a href="https://github.com/commercialhaskell/stack">Stack</a></h2>
-<p>Haskellのパッケージをビルドしたりインストールしたりするツールです。 <a href="https://twitter.com/tanakh">tanakh</a>さんによる <a href="http://qiita.com/tanakh/items/6866d0f570d0547df026">紹介記事</a>をきっかけに知りました。 Haskell力のない自分にはcabal hellを乗り越えられる自信が無かったという理由と、 タイムリーなので使ってみたいという理由から選択してみました。</p>
-<h2 id="hakyll"><a href="http://jaspervdj.be/hakyll/">Hakyll</a></h2>
-<p>Haskellによる静的htmlページ生成ツールです。 RubyによるJekyllにインスパイアされた作られたとか。</p>
+<h2 id="stack">Stack</h2>
+<p><a href="https://github.com/commercialhaskell/stack">Stack</a>は、 Haskellのパッケージをビルドしたりインストールしたりするツールです。 <a href="https://twitter.com/tanakh">tanakh</a>さんによる <a href="http://qiita.com/tanakh/items/6866d0f570d0547df026">紹介記事</a>をきっかけに知りました。 Haskell力のない自分にはcabal hellを乗り越えられる自信が無かったという理由と、 タイムリーなので使ってみたいという理由から選択してみました。</p>
+<h2 id="hakyll">Hakyll</h2>
+<p><a href="http://jaspervdj.be/hakyll/">Hakyll</a>は、 Haskellによる静的htmlページ生成ツールです。 RubyによるJekyllにインスパイアされた作られたとか。</p>
 <pre><code>hakyll-init &quot;site&quot;</code></pre>
 <p>とすることで<code>site</code>というディレクトリ内に必要なファイル一式が生成されます。 あとは、</p>
 <pre><code>ghc --make site.hs
 ./site build</code></pre>
-<p>と実行すれば<code>_site</code>ディレクトリ内にhtml及びcss等の必要ファイル一式が生成されます。 具体的には<code>site.hs</code>を見ながら<a href="http://jaspervdj.be/hakyll/tutorials.html">チュートリアル</a>を読んでみてください。シンプルな構成になっているのでなんとなくであればすぐに理解できると思います。(自分もまだ理解不足ですが)</p>
-<h2 id="travis-ci"><a href="https://travis-ci.org">Travis CI</a></h2>
-<p>CIを行うためのサービス。 <a href="https://github.com/commercialhaskell/stack/wiki/Travis">Stackを用いるための設定方法</a>が公開されています。</p>
-<h2 id="github-pages"><a href="https://pages.github.com">Github Pages</a></h2>
-<p>Githubのユーザやリポジトリ毎に提供されるWebページ公開サービス。ソースはGithubのリポジトリで管理する。</p>
+<p>と実行すれば<code>_site</code>ディレクトリ内にhtml及びcss等の必要ファイル一式が生成されます。 具体的には<code>site.hs</code>を見ながら<a href="http://jaspervdj.be/hakyll/tutorials.html">チュートリアル</a>を読んでみてください。 シンプルな構成になっているのでなんとなくであればすぐに理解できると思います。(自分もまだ理解不足ですが)</p>
+<h2 id="travis">Travis</h2>
+<p><a href="https://travis-ci.org">Travis CI</a>はCIを行うためのサービスです。 <a href="https://github.com/commercialhaskell/stack/wiki/Travis">Stackを用いるための設定方法</a>が公開されています。</p>
+<h2 id="github-pages">Github Pages</h2>
+<p><a href="https://pages.github.com">Github Pages</a>はユーザやリポジトリ毎に提供されるWebページ公開サービスです。 ソースはGithubのリポジトリで管理します。</p>
 <h2 id="記事作成-公開-の流れ">記事作成 〜 公開 の流れ</h2>
 <ul>
-<li><code>source</code>: markdownで記事を書く</li>
-<li><code>source</code>: hakyllでコンパイルし正しく表示されるか確認する (省略可)</li>
-<li><code>source</code>: githubにpushする</li>
-<li><code>master</code>: Travisがコンパイルしhtmlファイルを生成＆githubにpushする (自動)</li>
-<li><code>master</code>: Github Pagesに公開される</li>
+<li><code>source</code>ブランチ: markdownで記事を書く</li>
+<li><code>source</code>ブランチ: hakyllでコンパイルし正しく表示されるか確認する (省略可)</li>
+<li><code>source</code>ブランチ: githubにpushする</li>
+<li><code>master</code>ブランチ: Travisがコンパイルしhtmlファイルを生成＆githubにpushする (自動)</li>
+<li><code>master</code>ブランチ: Github Pagesに公開される</li>
 </ul>
 <p>つまり、記事生成を<code>source</code>ブランチで行ってgithubにpushすれば、 <code>master</code>ブランチに必要なファイルが作成され公開されるという事です。</p>
 <h2 id="準備">準備</h2>
@@ -64,16 +64,16 @@
 <p><a href="https://github.com/commercialhaskell/stack/releases">releases</a>から最新版をダウンロード。 パスが通っているディレクトリに配置する。</p>
 <h3 id="ビルドする">ビルドする</h3>
 <pre><code>cabal init</code></pre>
-<p>まず<code>.cabal</code>ファイルを作っておきます。 注意するところとしては、ライセンスをきちんと設定しておかないと (ディレクトリに<code>LILCENSE</code>が無いと)後にこけてしまいます。</p>
+<p>まず<code>.cabal</code>ファイルを作っておきます。 注意するところとしては、ライセンスをきちんと設定しておかないと (ディレクトリに<code>LILCENSE</code>が無いと？)後の<code>stack build</code>部でこけてしまいます。</p>
 <p>次に、生成された<code>.cabal</code>ファイルに<code>hakyll</code>依存を明記します。</p>
 <pre><code>build-depends: hakyll &gt;=4.5</code></pre>
-<p>Stackageで管理されている安定verが4.6.9.0 (2015.8.9時点)なので、 それが満たせるような表記になっていれば問題無いかと思います。</p>
+<p>Stackageで管理されている安定verが4.6.9.0なので、 それが満たせるような表記になっていれば良さそうです。</p>
 <pre><code>stack init</code></pre>
-<p>これで<code>stack.yml</code>が生成されます。</p>
-<p>次に<code>stack build</code>をします。すると現時点のバージョンでは、 <code>hfsevents: needed (&gt;=0.1.3)</code>と怒られてしまいます。ログの下の方に</p>
+<p>これで<code>stack.yaml</code>が生成されます。</p>
+<p>まずは<code>stack.yaml</code>をいじらずに<code>stack build</code>をしてみます。すると現時点のバージョンでは、 <code>hfsevents: needed (&gt;=0.1.3)</code>と怒られてしまいます。ログの下の方に</p>
 <pre><code>Recommended action: try adding the following to your extra-deps in .../stack.yaml
 - hfsevents-0.1.5</code></pre>
-<p>とあるので、<code>stack.yml</code>の<code>extra-deps</code>の項に追記します。</p>
+<p>とあるので、<code>stack.yaml</code>の<code>extra-deps</code>の項に追記します。</p>
 <pre><code>flags: {}
 packages:
 - '.'
@@ -83,9 +83,10 @@ resolver: lts-2.21</code></pre>
 <p>以上で</p>
 <pre><code>stack build</code></pre>
 <p>とすると必要なパッケージのインストールが始まります。(初回はちょっと長め)</p>
+<p>これまでsyntax highlightが必要な場合は<code>cabal install --reinstall -fhighlighting pandoc</code>とか してたと思います。おそらく<code>stack.yaml</code>の<code>flags</code>を設定してやればうまくいくかと思うのですが、 私はそれに気づかずにインストールしてしまいました。今現在再インストールするような仕組みは無く、 何を消去すれば再インストールできるのかわからなかったため、 とりあえず<a href="https://highlightjs.org">highlight.js</a>を使っています。 (masterブランチでは<code>stack cp</code>というコマンドがmergeされているみたいですし、 これでいけるのかもしれませんが)</p>
 <p>インストール終了後に</p>
 <pre><code>stack exec hakyll-init weblog</code></pre>
-<p>とすることで、<code>weblog</code>フォルダに必要ファイル一式が生成されます。 ここまででビルドできるようになるのですが、まずはgit submodule設定を行ってしまいます。</p>
+<p>とすることで、<code>weblog</code>フォルダに必要ファイル一式が生成されます。 ここまででビルドできるようになるのですが、まずはgit submoduleやTravisの設定を行ってしまいます。</p>
 <h3 id="travisの設定をする">Travisの設定をする</h3>
 <p><code>weblog/_site</code>をサブモジュールに追加します。 そのためまずは、Githubのレポジトリ(<code>master</code>ブランチ)に空の状態でpushします。</p>
 <pre><code>git init
@@ -199,23 +200,28 @@ notifications:
   <footer id="footer">
     <div class="contents">
       <div class="container">
-        
-        <div class="one-half column">
-          <a href="http://335g.github.io">
-            milestoneeee
-          </a>
+        <div class="row">
+          <div class="one-half column">
+            <div id="milestoneeee">
+              <a href="http://335g.github.io">
+                milestoneeee
+              </a>
+            </div>
+          </div>
+          <div class="one-half column">
+            <div id="copyright">
+              2015 © 335g .
+            </div>
+            <div id="sns">
+              <a href="http://github.com/335g">
+                <i class="fa fa-github-alt fa-lg"></i>
+              </a>
+              <a href="http://twitter.com/335g">
+                <i class="fa fa-twitter fa-lg"></i>
+              </a>
+            </div>
+          </div>
         </div>
-
-        <div class="one-half column">
-          2015 © 335g .
-          <a href="http://github.com/335g">
-            <i class="fa fa-github-alt fa-lg"></i>
-          </a>
-          <a href="http://twitter.com/335g">
-            <i class="fa fa-twitter fa-lg"></i>
-          </a>
-        </div>
-
       </div>
     </div>
   </footer>
