@@ -13,16 +13,18 @@ tags: Haskell, Hakyll, stack, Travis
 
 できたのが[これ](https://github.com/335g/335g.github.io)。
 
-## [Stack](https://github.com/commercialhaskell/stack)
+## Stack
 
+[Stack](https://github.com/commercialhaskell/stack)は、
 Haskellのパッケージをビルドしたりインストールしたりするツールです。
 [tanakh](https://twitter.com/tanakh)さんによる
 [紹介記事](http://qiita.com/tanakh/items/6866d0f570d0547df026)をきっかけに知りました。
 Haskell力のない自分にはcabal hellを乗り越えられる自信が無かったという理由と、
 タイムリーなので使ってみたいという理由から選択してみました。
 
-## [Hakyll](http://jaspervdj.be/hakyll/)
+## Hakyll
 
+[Hakyll](http://jaspervdj.be/hakyll/)は、
 Haskellによる静的htmlページ生成ツールです。
 RubyによるJekyllにインスパイアされた作られたとか。
 
@@ -39,24 +41,26 @@ ghc --make site.hs
 ```
 
 と実行すれば`_site`ディレクトリ内にhtml及びcss等の必要ファイル一式が生成されます。
-具体的には`site.hs`を見ながら[チュートリアル](http://jaspervdj.be/hakyll/tutorials.html)を読んでみてください。シンプルな構成になっているのでなんとなくであればすぐに理解できると思います。(自分もまだ理解不足ですが)
+具体的には`site.hs`を見ながら[チュートリアル](http://jaspervdj.be/hakyll/tutorials.html)を読んでみてください。
+シンプルな構成になっているのでなんとなくであればすぐに理解できると思います。(自分もまだ理解不足ですが)
 
-## [Travis CI](https://travis-ci.org)
+## Travis
 
-CIを行うためのサービス。
+[Travis CI](https://travis-ci.org)はCIを行うためのサービスです。
 [Stackを用いるための設定方法](https://github.com/commercialhaskell/stack/wiki/Travis)が公開されています。
 
-## [Github Pages](https://pages.github.com)
+## Github Pages
 
-Githubのユーザやリポジトリ毎に提供されるWebページ公開サービス。ソースはGithubのリポジトリで管理する。
+[Github Pages](https://pages.github.com)はユーザやリポジトリ毎に提供されるWebページ公開サービスです。
+ソースはGithubのリポジトリで管理します。
 
 ## 記事作成 〜 公開 の流れ
 
-- `source`: markdownで記事を書く
-- `source`: hakyllでコンパイルし正しく表示されるか確認する (省略可)
-- `source`: githubにpushする
-- `master`: Travisがコンパイルしhtmlファイルを生成＆githubにpushする (自動)
-- `master`: Github Pagesに公開される
+- `source`ブランチ: markdownで記事を書く
+- `source`ブランチ: hakyllでコンパイルし正しく表示されるか確認する (省略可)
+- `source`ブランチ: githubにpushする
+- `master`ブランチ: Travisがコンパイルしhtmlファイルを生成＆githubにpushする (自動)
+- `master`ブランチ: Github Pagesに公開される
 
 つまり、記事生成を`source`ブランチで行ってgithubにpushすれば、
 `master`ブランチに必要なファイルが作成され公開されるという事です。
@@ -76,7 +80,7 @@ cabal init
 
 まず`.cabal`ファイルを作っておきます。
 注意するところとしては、ライセンスをきちんと設定しておかないと
-(ディレクトリに`LILCENSE`が無いと)後にこけてしまいます。  
+(ディレクトリに`LILCENSE`が無いと？)後の`stack build`部でこけてしまいます。  
 
 次に、生成された`.cabal`ファイルに`hakyll`依存を明記します。
 
@@ -84,23 +88,23 @@ cabal init
 build-depends: hakyll >=4.5
 ```
 
-Stackageで管理されている安定verが4.6.9.0 (2015.8.9時点)なので、
-それが満たせるような表記になっていれば問題無いかと思います。
+Stackageで管理されている安定verが4.6.9.0なので、
+それが満たせるような表記になっていれば良さそうです。
 
 ```
 stack init
 ```
 
-これで`stack.yml`が生成されます。  
+これで`stack.yaml`が生成されます。  
 
-次に`stack build`をします。すると現時点のバージョンでは、
+まずは`stack.yaml`をいじらずに`stack build`をしてみます。すると現時点のバージョンでは、
 `hfsevents: needed (>=0.1.3)`と怒られてしまいます。ログの下の方に
 
 ```
 Recommended action: try adding the following to your extra-deps in .../stack.yaml
 - hfsevents-0.1.5
 ```
-とあるので、`stack.yml`の`extra-deps`の項に追記します。
+とあるので、`stack.yaml`の`extra-deps`の項に追記します。
 
 ```
 flags: {}
@@ -119,6 +123,14 @@ stack build
 
 とすると必要なパッケージのインストールが始まります。(初回はちょっと長め)  
 
+これまでsyntax highlightが必要な場合は`cabal install --reinstall -fhighlighting pandoc`とか
+してたと思います。おそらく`stack.yaml`の`flags`を設定してやればうまくいくかと思うのですが、
+私はそれに気づかずにインストールしてしまいました。今現在再インストールするような仕組みは無く、
+何を消去すれば再インストールできるのかわからなかったため、
+とりあえず[highlight.js](https://highlightjs.org)を使っています。
+(masterブランチでは`stack cp`というコマンドがmergeされているみたいですし、
+これでいけるのかもしれませんが)  
+
 インストール終了後に
 
 ```
@@ -126,7 +138,7 @@ stack exec hakyll-init weblog
 ```
 
 とすることで、`weblog`フォルダに必要ファイル一式が生成されます。
-ここまででビルドできるようになるのですが、まずはgit submodule設定を行ってしまいます。
+ここまででビルドできるようになるのですが、まずはgit submoduleやTravisの設定を行ってしまいます。
 
 ### Travisの設定をする
 

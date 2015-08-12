@@ -14,7 +14,13 @@
 .post-title a:hover { color: #000000; }
 .post-title a:active { color: #000000; }
 
-div { display: block; }
+div { 
+  display: block;
+}
+
+html {
+  font-size: 10px;
+}
 
 html, body {
   height: 100%;
@@ -69,57 +75,67 @@ footer {
   font-weight: 400;
 }
 
+#copyright, #sns {
+  display: inline;
+}
+
 /** responsive **/
 
 @media (min-width:  300px){ 
-  #footer .contents{ font-size: 2.0rem; padding: 7.0rem 1.0rem; }
-  #site-wrap{ margin-bottom: -200px; }
-  footer, #site-wrap:after{ height: 200px; }
+  body { font-size: 1.8rem; }
+  #footer .contents{ font-size: 2.0rem; padding: 4.25rem 0.0rem; }
+  #site-wrap{ margin-bottom: -15.0rem; }
+  footer, #site-wrap:after{ height: 15.0rem; }
   #contents{ padding: 5.0rem 0.5rem 2.0rem; }
   .post-title { font-size: 2.0rem; }
   .posted-date { font-size: 1.4rem; }
   .post-description { font-size: 1.4rem; padding-left: 2.7rem; }
 }
 @media (min-width:  400px){ 
-  #footer .contents{ font-size: 1.8rem; padding: 6.0rem 1.5rem; }
-  #site-wrap{ margin-bottom: -180px; }
-  footer, #site-wrap:after{ height: 180px; }
+  body { font-size: 1.6rem; }
+  #footer .contents{ font-size: 2.0rem; padding: 4.25rem 0.0rem; }
+  #site-wrap{ margin-bottom: -15.0rem; }
+  footer, #site-wrap:after{ height: 15.0rem; }
   #contents{ padding: 5.0rem 1.0rem 2.0rem; }
   .post-title { font-size: 2.0rem; }
   .posted-date { font-size: 1.4rem; }
   .post-description { font-size: 1.4rem; padding-left: 2.7rem; }
 }
 @media (min-width:  550px){ 
-  #footer .contents{ font-size: 1.6rem; padding: 5.0rem 1.8rem; }
-  #site-wrap{ margin-bottom: -150px; }
-  footer, #site-wrap:after{ height: 150px; }
+  body { font-size: 1.4rem; }
+  #footer .contents{ font-size: 2.0rem; padding: 4.25rem 0.0rem; }
+  #site-wrap{ margin-bottom: -15.0rem; }
+  footer, #site-wrap:after{ height: 15.0rem; }
   #contents{ padding: 5.0rem 2.0rem 2.0rem; }
   .post-title { font-size: 2.0rem; }
   .posted-date { font-size: 1.4rem; }
   .post-description { font-size: 1.4rem; padding-left: 2.7rem; }
 }
 @media (min-width:  750px){ 
-  #footer .contents{ font-size: 1.5rem; padding: 4.0rem 2.0rem; }
-  #site-wrap{ margin-bottom: -120px; }
-  footer, #site-wrap:after{ height: 120px; }
+  body { font-size: 1.2rem; }
+  #footer .contents{ font-size: 1.4rem; padding: 4.3rem 0.0rem; }
+  #site-wrap{ margin-bottom: -10.0rem; }
+  footer, #site-wrap:after{ height: 10.0rem; }
   #contents{ padding: 5.0rem 5.0rem 2.0rem; }
   .post-title { font-size: 2.0rem; }
   .posted-date { font-size: 1.4rem; }
   .post-description { font-size: 1.4rem; padding-left: 2.7rem; }
 }
 @media (min-width: 1000px){ 
-  #footer .contents{ font-size: 1.5rem; padding: 4.0rem 2.0rem; }
-  #site-wrap{ margin-bottom: -120px; }
-  footer, #site-wrap:after{ height: 120px; }
+  body { font-size: 1.2rem; }
+  #footer .contents{ font-size: 1.4rem; padding: 4.3rem 0.0rem; }
+  #site-wrap{ margin-bottom: -10.0rem; }
+  footer, #site-wrap:after{ height: 10.0rem; }
   #contents{ padding: 5.0rem 5.0rem 2.0rem; }
   .post-title { font-size: 2.0rem; }
   .posted-date { font-size: 1.4rem; }
   .post-description { font-size: 1.4rem; padding-left: 2.7rem; }
 }
 @media (min-width: 1200px){ 
-  #footer .contents{ font-size: 1.5rem; padding: 4.0rem 2.0rem; }
-  #site-wrap{ margin-bottom: -120px; }
-  footer, #site-wrap:after{ height: 120px; }
+  body { font-size: 1.2rem; }
+  #footer .contents{ font-size: 1.4rem; padding: 4.3rem 0.0rem; }
+  #site-wrap{ margin-bottom: -10.0rem; }
+  footer, #site-wrap:after{ height: 10.0rem; }
   #contents{ padding: 5.0rem 5.0rem 2.0rem; }
   .post-title { font-size: 2.0rem; }
   .posted-date { font-size: 1.4rem; }
