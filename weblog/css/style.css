@@ -95,29 +95,18 @@ footer {
   #footer .contents{ font-size: 1.5rem; padding: 4.25rem 0.0rem; }
   #site-wrap{ margin-bottom: -15.0rem; }
   footer, #site-wrap:after{ height: 15.0rem; }
-  #contents{ padding: 3.0rem 1.0rem 2.0rem; }
+  #contents{ padding: 2.0rem 1.0rem; }
   h3.post-title { font-size: 2.0rem; margin-bottom: 0.5rem; padding-right: 1.5rem; }
   .posted-date { font-size: 1.0rem; }
   .post-description { font-size: 1.125rem; padding: 0.0rem 0.0rem 2.0rem 2.7rem; }
 }
 
-@media screen (min-width: 550px){ 
+@media (min-width: 550px) { 
   #footer .contents{ font-size: 1.5rem; padding: 4.25rem 0.0rem; }
   #site-wrap{ margin-bottom: -15.0rem; }
   footer, #site-wrap:after{ height: 15.0rem; }
-  #contents{ padding: 3.0rem 1.0rem 2.0rem; }
+  #contents{ padding: 2.0rem 1.0rem; }
   h3.post-title { font-size: 2.0rem; margin-bottom: 0.5rem; padding-right: 1.5rem; }
   .posted-date { font-size: 1.0rem; }
   .post-description { font-size: 1.125rem; padding: 0.0rem 0.0rem 2.0rem 2.7rem; }
 }
-
-@media screen (min-width: 750px){ 
-  #footer .contents{ font-size: 1.4rem; padding: 4.3rem 0.0rem; }
-  #site-wrap{ margin-bottom: -10.0rem; }
-  footer, #site-wrap:after{ height: 10.0rem; }
-  #contents{ padding: 3.0rem 5.0rem 2.0rem; }
-  h3.post-title { font-size: 2.0rem; margin-bottom: 0.5rem; padding-right: 1.5rem; }
-  .posted-date { font-size: 1.0rem; }
-  .post-description { font-size: 1.125rem; padding: 0.0rem 0.0rem 2.0rem 2.7rem; }
-}
-
