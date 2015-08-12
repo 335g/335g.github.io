@@ -79,10 +79,12 @@ footer {
   display: inline;
 }
 
-/** responsive **/
 
-@media (min-width:  300px){ 
-  body { font-size: 1.8rem; }
+/*
+ * iPhone5s :320px, iPhone6 :375px
+ */
+@media screen and (min-width: 320px) and (max-width: 413px){ 
+  body { font-size: 2.0rem; }
   #footer .contents{ font-size: 2.0rem; padding: 4.25rem 0.0rem; }
   #site-wrap{ margin-bottom: -15.0rem; }
   footer, #site-wrap:after{ height: 15.0rem; }
@@ -91,7 +93,11 @@ footer {
   .posted-date { font-size: 1.4rem; }
   .post-description { font-size: 1.4rem; padding-left: 2.7rem; }
 }
-@media (min-width:  400px){ 
+
+/*
+ * iPhone6+ :414px
+ */
+@media screen and (min-width: 414px) and (max-width: 549px) { 
   body { font-size: 1.6rem; }
   #footer .contents{ font-size: 2.0rem; padding: 4.25rem 0.0rem; }
   #site-wrap{ margin-bottom: -15.0rem; }
@@ -101,7 +107,8 @@ footer {
   .posted-date { font-size: 1.4rem; }
   .post-description { font-size: 1.4rem; padding-left: 2.7rem; }
 }
-@media (min-width:  550px){ 
+
+@media (min-width: 550px){ 
   body { font-size: 1.4rem; }
   #footer .contents{ font-size: 2.0rem; padding: 4.25rem 0.0rem; }
   #site-wrap{ margin-bottom: -15.0rem; }
@@ -111,7 +118,7 @@ footer {
   .posted-date { font-size: 1.4rem; }
   .post-description { font-size: 1.4rem; padding-left: 2.7rem; }
 }
-@media (min-width:  750px){ 
+@media (min-width: 750px){ 
   body { font-size: 1.2rem; }
   #footer .contents{ font-size: 1.4rem; padding: 4.3rem 0.0rem; }
   #site-wrap{ margin-bottom: -10.0rem; }
