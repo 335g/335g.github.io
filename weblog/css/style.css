@@ -22,10 +22,6 @@ html {
   font-size: 1.0rem;
 }
 
-body {
-  font-size: 1.5rem;
-}
-
 html, body {
   height: 100%;
 }
@@ -87,26 +83,35 @@ footer {
   display: inline;
 }
 
-
-/*
- * iPhone5s :320px, iPhone6 :375px, iPhone6+: 414px
- */
-@media screen and (min-width: 320px) and (max-width: 549px){ 
+@media screen and (max-width: 640px){ 
+  body { fot-size: 1.0rem; }
   #footer .contents{ font-size: 1.5rem; padding: 4.25rem 0.0rem; }
   #site-wrap{ margin-bottom: -15.0rem; }
   footer, #site-wrap:after{ height: 15.0rem; }
   #contents{ padding: 2.0rem 1.0rem; }
   h3.post-title { font-size: 2.0rem; margin-bottom: 0.5rem; padding-right: 1.5rem; }
   .posted-date { font-size: 1.0rem; }
-  .post-description { font-size: 1.125rem; padding: 0.0rem 0.0rem 2.0rem 2.7rem; }
+  .post-description { font-size: 1.125rem; padding: 0.0rem 0.0rem 3.0rem 2.7rem; }
 }
 
-@media (min-width: 550px) { 
+@media screen and (max-width: 768px) { 
+  body { font-size: 1.0rem; }
   #footer .contents{ font-size: 1.5rem; padding: 4.25rem 0.0rem; }
   #site-wrap{ margin-bottom: -15.0rem; }
   footer, #site-wrap:after{ height: 15.0rem; }
   #contents{ padding: 2.0rem 1.0rem; }
   h3.post-title { font-size: 2.0rem; margin-bottom: 0.5rem; padding-right: 1.5rem; }
   .posted-date { font-size: 1.0rem; }
-  .post-description { font-size: 1.125rem; padding: 0.0rem 0.0rem 2.0rem 2.7rem; }
+  .post-description { font-size: 1.125rem; padding: 0.0rem 0.0rem 3.0rem 2.7rem; }
+}
+
+@media screen and (min-width: 769px) { 
+  body { font-size: 1.0rem; }
+  #footer .contents{ font-size: 1.5rem; padding: 4.25rem 0.0rem; }
+  #site-wrap{ margin-bottom: -15.0rem; }
+  footer, #site-wrap:after{ height: 15.0rem; }
+  #contents{ padding: 2.0rem 1.0rem; }
+  h3.post-title { font-size: 2.0rem; margin-bottom: 0.5rem; padding-right: 1.5rem; }
+  .posted-date { font-size: 1.0rem; }
+  .post-description { font-size: 1.125rem; padding: 0.0rem 0.0rem 3.0rem 2.7rem; }
 }
