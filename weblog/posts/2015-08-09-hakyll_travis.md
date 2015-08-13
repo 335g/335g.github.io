@@ -6,12 +6,12 @@ tags: Haskell, Hakyll, stack, Travis
 
 やった事をまとめると、以下の通り。
 
-- StackでHaskellのパッケージを管理する。
+- StackでHaskellのパッケージ(Hakyll)を管理する。
 - markdownでブログを書き、Hakyllでhtmlファイルに変換する。
 - 実際には、TravisがHakyllを使ってコンパイルしhtmlファイルに変換する。
 - ソースファイルはGithubの公開リポジトリで管理し、Github Pagesで公開する。
 
-できたのが[これ](https://github.com/335g/335g.github.io)。
+できたのが[本ブログ](https://github.com/335g/335g.github.io)。
 
 ## Stack
 
@@ -52,25 +52,29 @@ ghc --make site.hs
 ## Github Pages
 
 [Github Pages](https://pages.github.com)はユーザやリポジトリ毎に提供されるWebページ公開サービスです。
-ソースはGithubのリポジトリで管理します。
+ソースはGithubのリポジトリで管理します。注意が必要なのは最上階層に`index.html`が必要ということでしょうか。
+Hakyllでは`_site`にhtmlが生成されるからです。
 
 ## 記事作成 〜 公開 の流れ
 
+Hakyllでは`_site`ディレクトリにコードを生成するが、最上階層に`index.html`が必要という問題を
+git submoduleで吸収します。また、ついでにTravisにコード生成もやってもらいます。
+
+- あらかじめ`_site`ディレクトリをsubmoduleに追加しておく
 - `source`ブランチ: markdownで記事を書く
 - `source`ブランチ: hakyllでコンパイルし正しく表示されるか確認する (省略可)
 - `source`ブランチ: githubにpushする
-- `master`ブランチ: Travisがコンパイルしhtmlファイルを生成＆githubにpushする (自動)
-- `master`ブランチ: Github Pagesに公開される
+- `master`ブランチ: Travisがコンパイルしhtmlファイルを生成する(`_site`ディレクトリに)
+- `master`ブランチ: Travisがgithubにpushする
+- Github Pagesに公開される
 
 つまり、記事生成を`source`ブランチで行ってgithubにpushすれば、
-`master`ブランチに必要なファイルが作成され公開されるという事です。
-
-## 準備
+`master`ブランチに必要なファイルが作成され記事が公開されるという流れです。
 
 ### stackをインストール
 
 [releases](https://github.com/commercialhaskell/stack/releases)から最新版をダウンロード。
-パスが通っているディレクトリに配置する。
+パスが通っているディレクトリに配置します。
 
 ### ビルドする
 
@@ -88,7 +92,7 @@ cabal init
 build-depends: hakyll >=4.5
 ```
 
-Stackageで管理されている安定verが4.6.9.0なので、
+Stackageで管理されている安定verが4.6.9.0でしたので、
 それが満たせるような表記になっていれば良さそうです。
 
 ```
@@ -127,9 +131,7 @@ stack build
 してたと思います。おそらく`stack.yaml`の`flags`を設定してやればうまくいくかと思うのですが、
 私はそれに気づかずにインストールしてしまいました。今現在再インストールするような仕組みは無く、
 何を消去すれば再インストールできるのかわからなかったため、
-とりあえず[highlight.js](https://highlightjs.org)を使っています。
-(masterブランチでは`stack cp`というコマンドがmergeされているみたいですし、
-これでいけるのかもしれませんが)  
+とりあえず[highlight.js](https://highlightjs.org)を使っています。  
 
 インストール終了後に
 
@@ -140,7 +142,7 @@ stack exec hakyll-init weblog
 とすることで、`weblog`フォルダに必要ファイル一式が生成されます。
 ここまででビルドできるようになるのですが、まずはgit submoduleやTravisの設定を行ってしまいます。
 
-### Travisの設定をする
+### git submodule & Travisの設定をする
 
 `weblog/_site`をサブモジュールに追加します。
 そのためまずは、Githubのレポジトリ(`master`ブランチ)に空の状態でpushします。
@@ -156,9 +158,13 @@ git submodule add git@github.com:<account>/<account>.github.io.git weblog/_site
 ```
 
 作成された`.gitmodule`を`Travis`から読めるようにするため、
-urlを`https://github.com/<account name>/<account name>.github.io.git`に修正します。  
+urlを修正します。
 
-必要無いファイルは管理し無いように`.gitignore`を作成します。
+```
+https://github.com/<account name>/<account name>.github.io.git
+```
+
+必要無いファイルは管理しないように`.gitignore`を作成します。
 
 ```
 weblog/_site
@@ -190,7 +196,7 @@ travis encrypt -r <account>/<account>.github.io.git GH_TOKEN=<github token>
 sudo gem install travis
 ```
 
-`.travis.yml`はこんな感じです。
+`.travis.yml`はこんな感じにしました。
 
 ```
 
@@ -271,8 +277,8 @@ git push origin source
 ## まとめ(感想)
 
 stackもTravisも初めてで、Haskell久しぶりな状態だったため時間がかかりましたが、
-作業量はそれほどではありませんでした。心配していたcabal hellも起きませんし、
-チャンスがあればまたstack使ってみたいと思います。ただ、その前にcssなんとかしないとw
+作業量はそれほどではありませんでした。心配していたcabal hellも起きませんでしたし、
+チャンスがあればまたstack使ってみたいと思います。
 
 - Stack便利
 - Hakyll便利

@@ -3,6 +3,7 @@
  *
  *   for http://335g.github.io
  *   designed with Skeleton (https://github.com/dhg/Skeleton)
+ *   This is writtern mobile first.
  *
  * */
 
@@ -49,6 +50,13 @@
 .pb3 { padding-bottom: 3rem; }
 .pb4 { padding-bottom: 4rem; }
 .pb5 { padding-bottom: 5rem; }
+
+.pl0 { padding-left: 0rem; }
+.pl1 { padding-left: 1rem; }
+.pl2 { padding-left: 2rem; }
+.pl3 { padding-left: 3rem; }
+.pl4 { padding-left: 4rem; }
+.pl5 { padding-left: 5rem; }
 
 html, body {
   height: 100%;
@@ -111,20 +119,55 @@ footer .copyright {
   font-size: 1.4rem;
 }
 
+#contents-wrap {
+  padding: 2rem 2rem 0rem;
+}
 
-pre, code {
-  font-family: Menlo, Monaco, "Courier New", monospace;
+.posted-date {
+  font-style: Italic;
+  font-weight: 300;
+  color: #909090;
+}
+
+.post-title a:link { color: #000000; }
+.post-title a:visited { color: #000000; }
+.post-title a:hover { color: #000000; }
+.post-title a:active { color: #000000; }
+
+.post-title {
+  font-style: normal;
+  font-weight: 700;
+  color: #000000;
+}
+
+.post-description {
+  font-style: normal;
+  font-weight: 400;
+  color: #404040;
+}
+
+ul {
+  padding-left: 1rem;
+}
+
+li {
+  margin-bottom: 0rem;
+}
+
+@media screen and (max-width: 549px){
+  footer .container { width: 90%; }
+  footer .one-third.column { width: 33.3333333333%; }
+
+  h1, .h1 { font-size: 3.6rem; }
+  h2, .h2 { font-size: 2.6rem; }
+  h3, .h3 { font-size: 2.0rem; }
+  h4, .h4 { font-size: 1.4rem; }
 }
 
 /*
- * enabled smaller size
+ * skeleton support Grid that width exceeds over 550px.
  */
-@media screen and (min-width: 100px) and (max-width: 549px){
-  footer .container { width: 90%; }
-  footer .one-third.column { width: 33.3333333333%; }
-}
-
-@media screen and (max-width: 768px){
+@media screen and (min-width: 550px){
   h1, .h1 { font-size: 4.5rem; }
   h2, .h2 { font-size: 3.2rem; }
   h3, .h3 { font-size: 2.3rem; }
