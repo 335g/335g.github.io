@@ -15,24 +15,24 @@
 
 <body>
   <div id="contents">
-    <div class="contents-wrap">
+    <div id="contents-wrap">
       <div class="post-infos">
   <div class="posted-date">
     August  9, 2015
   </div>
-  <h1 class="post-title">
+  <h2 class="post-title">
     "Hakyll, stack, Travis CI, Github でブログを管理する"
-  </h1>
+  </h2>
 </div>
-<div id="post-main">
+<div id="post-main" class="pt4">
   <p>やった事をまとめると、以下の通り。</p>
 <ul>
-<li>StackでHaskellのパッケージを管理する。</li>
+<li>StackでHaskellのパッケージ(Hakyll)を管理する。</li>
 <li>markdownでブログを書き、Hakyllでhtmlファイルに変換する。</li>
 <li>実際には、TravisがHakyllを使ってコンパイルしhtmlファイルに変換する。</li>
 <li>ソースファイルはGithubの公開リポジトリで管理し、Github Pagesで公開する。</li>
 </ul>
-<p>できたのが<a href="https://github.com/335g/335g.github.io">これ</a>。</p>
+<p>できたのが<a href="https://github.com/335g/335g.github.io">本ブログ</a>。</p>
 <h2 id="stack">Stack</h2>
 <p><a href="https://github.com/commercialhaskell/stack">Stack</a>は、 Haskellのパッケージをビルドしたりインストールしたりするツールです。 <a href="https://twitter.com/tanakh">tanakh</a>さんによる <a href="http://qiita.com/tanakh/items/6866d0f570d0547df026">紹介記事</a>をきっかけに知りました。 Haskell力のない自分にはcabal hellを乗り越えられる自信が無かったという理由と、 タイムリーなので使ってみたいという理由から選択してみました。</p>
 <h2 id="hakyll">Hakyll</h2>
@@ -45,25 +45,27 @@
 <h2 id="travis">Travis</h2>
 <p><a href="https://travis-ci.org">Travis CI</a>はCIを行うためのサービスです。 <a href="https://github.com/commercialhaskell/stack/wiki/Travis">Stackを用いるための設定方法</a>が公開されています。</p>
 <h2 id="github-pages">Github Pages</h2>
-<p><a href="https://pages.github.com">Github Pages</a>はユーザやリポジトリ毎に提供されるWebページ公開サービスです。 ソースはGithubのリポジトリで管理します。</p>
+<p><a href="https://pages.github.com">Github Pages</a>はユーザやリポジトリ毎に提供されるWebページ公開サービスです。 ソースはGithubのリポジトリで管理します。注意が必要なのは最上階層に<code>index.html</code>が必要ということでしょうか。 Hakyllでは<code>_site</code>にhtmlが生成されるからです。</p>
 <h2 id="記事作成-公開-の流れ">記事作成 〜 公開 の流れ</h2>
+<p>Hakyllでは<code>_site</code>ディレクトリにコードを生成するが、最上階層に<code>index.html</code>が必要という問題を git submoduleで吸収します。また、ついでにTravisにコード生成もやってもらいます。</p>
 <ul>
+<li>あらかじめ<code>_site</code>ディレクトリをsubmoduleに追加しておく</li>
 <li><code>source</code>ブランチ: markdownで記事を書く</li>
 <li><code>source</code>ブランチ: hakyllでコンパイルし正しく表示されるか確認する (省略可)</li>
 <li><code>source</code>ブランチ: githubにpushする</li>
-<li><code>master</code>ブランチ: Travisがコンパイルしhtmlファイルを生成＆githubにpushする (自動)</li>
-<li><code>master</code>ブランチ: Github Pagesに公開される</li>
+<li><code>master</code>ブランチ: Travisがコンパイルしhtmlファイルを生成する(<code>_site</code>ディレクトリに)</li>
+<li><code>master</code>ブランチ: Travisがgithubにpushする</li>
+<li>Github Pagesに公開される</li>
 </ul>
-<p>つまり、記事生成を<code>source</code>ブランチで行ってgithubにpushすれば、 <code>master</code>ブランチに必要なファイルが作成され公開されるという事です。</p>
-<h2 id="準備">準備</h2>
+<p>つまり、記事生成を<code>source</code>ブランチで行ってgithubにpushすれば、 <code>master</code>ブランチに必要なファイルが作成され記事が公開されるという流れです。</p>
 <h3 id="stackをインストール">stackをインストール</h3>
-<p><a href="https://github.com/commercialhaskell/stack/releases">releases</a>から最新版をダウンロード。 パスが通っているディレクトリに配置する。</p>
+<p><a href="https://github.com/commercialhaskell/stack/releases">releases</a>から最新版をダウンロード。 パスが通っているディレクトリに配置します。</p>
 <h3 id="ビルドする">ビルドする</h3>
 <pre><code>cabal init</code></pre>
 <p>まず<code>.cabal</code>ファイルを作っておきます。 注意するところとしては、ライセンスをきちんと設定しておかないと (ディレクトリに<code>LILCENSE</code>が無いと？)後の<code>stack build</code>部でこけてしまいます。</p>
 <p>次に、生成された<code>.cabal</code>ファイルに<code>hakyll</code>依存を明記します。</p>
 <pre><code>build-depends: hakyll &gt;=4.5</code></pre>
-<p>Stackageで管理されている安定verが4.6.9.0なので、 それが満たせるような表記になっていれば良さそうです。</p>
+<p>Stackageで管理されている安定verが4.6.9.0でしたので、 それが満たせるような表記になっていれば良さそうです。</p>
 <pre><code>stack init</code></pre>
 <p>これで<code>stack.yaml</code>が生成されます。</p>
 <p>まずは<code>stack.yaml</code>をいじらずに<code>stack build</code>をしてみます。すると現時点のバージョンでは、 <code>hfsevents: needed (&gt;=0.1.3)</code>と怒られてしまいます。ログの下の方に</p>
@@ -79,11 +81,11 @@ resolver: lts-2.21</code></pre>
 <p>以上で</p>
 <pre><code>stack build</code></pre>
 <p>とすると必要なパッケージのインストールが始まります。(初回はちょっと長め)</p>
-<p>これまでsyntax highlightが必要な場合は<code>cabal install --reinstall -fhighlighting pandoc</code>とか してたと思います。おそらく<code>stack.yaml</code>の<code>flags</code>を設定してやればうまくいくかと思うのですが、 私はそれに気づかずにインストールしてしまいました。今現在再インストールするような仕組みは無く、 何を消去すれば再インストールできるのかわからなかったため、 とりあえず<a href="https://highlightjs.org">highlight.js</a>を使っています。 (masterブランチでは<code>stack cp</code>というコマンドがmergeされているみたいですし、 これでいけるのかもしれませんが)</p>
+<p>これまでsyntax highlightが必要な場合は<code>cabal install --reinstall -fhighlighting pandoc</code>とか してたと思います。おそらく<code>stack.yaml</code>の<code>flags</code>を設定してやればうまくいくかと思うのですが、 私はそれに気づかずにインストールしてしまいました。今現在再インストールするような仕組みは無く、 何を消去すれば再インストールできるのかわからなかったため、 とりあえず<a href="https://highlightjs.org">highlight.js</a>を使っています。</p>
 <p>インストール終了後に</p>
 <pre><code>stack exec hakyll-init weblog</code></pre>
 <p>とすることで、<code>weblog</code>フォルダに必要ファイル一式が生成されます。 ここまででビルドできるようになるのですが、まずはgit submoduleやTravisの設定を行ってしまいます。</p>
-<h3 id="travisの設定をする">Travisの設定をする</h3>
+<h3 id="git-submodule-travisの設定をする">git submodule &amp; Travisの設定をする</h3>
 <p><code>weblog/_site</code>をサブモジュールに追加します。 そのためまずは、Githubのレポジトリ(<code>master</code>ブランチ)に空の状態でpushします。</p>
 <pre><code>git init
 git commit --allow-empty -m 'first commit'
@@ -92,8 +94,9 @@ git push origin master
 
 git checkout -b source
 git submodule add git@github.com:&lt;account&gt;/&lt;account&gt;.github.io.git weblog/_site</code></pre>
-<p>作成された<code>.gitmodule</code>を<code>Travis</code>から読めるようにするため、 urlを<code>https://github.com/&lt;account name&gt;/&lt;account name&gt;.github.io.git</code>に修正します。</p>
-<p>必要無いファイルは管理し無いように<code>.gitignore</code>を作成します。</p>
+<p>作成された<code>.gitmodule</code>を<code>Travis</code>から読めるようにするため、 urlを修正します。</p>
+<pre><code>https://github.com/&lt;account name&gt;/&lt;account name&gt;.github.io.git</code></pre>
+<p>必要無いファイルは管理しないように<code>.gitignore</code>を作成します。</p>
 <pre><code>weblog/_site
 weblog/_cache
 weblog/site*
@@ -106,7 +109,7 @@ weblog/site*
 travis encrypt -r &lt;account&gt;/&lt;account&gt;.github.io.git GH_TOKEN=&lt;github token&gt;</code></pre>
 <p>ここで使う<code>&lt;github token&gt;</code>はGithubで生成したものを使います。 また、<code>travis</code>コマンドは<code>gem</code>を使ってあらかじめインストールしておきます。</p>
 <pre><code>sudo gem install travis</code></pre>
-<p><code>.travis.yml</code>はこんな感じです。</p>
+<p><code>.travis.yml</code>はこんな感じにしました。</p>
 <pre><code>
 language: haskell
 
@@ -171,7 +174,7 @@ notifications:
 <p>ここまで設定しておけばpushすることで公開されます。</p>
 <pre><code>git push origin source</code></pre>
 <h2 id="まとめ感想">まとめ(感想)</h2>
-<p>stackもTravisも初めてで、Haskell久しぶりな状態だったため時間がかかりましたが、 作業量はそれほどではありませんでした。心配していたcabal hellも起きませんし、 チャンスがあればまたstack使ってみたいと思います。ただ、その前にcssなんとかしないとw</p>
+<p>stackもTravisも初めてで、Haskell久しぶりな状態だったため時間がかかりましたが、 作業量はそれほどではありませんでした。心配していたcabal hellも起きませんでしたし、 チャンスがあればまたstack使ってみたいと思います。</p>
 <ul>
 <li>Stack便利</li>
 <li>Hakyll便利</li>
