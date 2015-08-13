@@ -1,6 +1,6 @@
 ---
 title: Hakyll, stack, Travis CI, Github でブログを管理する
-description: それぞれの初期設定
+description: 初期設定
 tags: Haskell, Hakyll, stack, Travis
 ---
 

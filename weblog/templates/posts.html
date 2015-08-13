@@ -1,5 +1,23 @@
 $if(page-title)$
-    <h1>$page-title$</h1>
+  <div id="page-title">
+    $page-title$
+  </div>
 $endif$
 
-$partial("templates/post-list.html")$
+<div id="posts-wrap">
+$for(posts)$
+  <div class="post-infos">
+    <div class="posted-date">
+      $date$
+    </div>
+    <h2 class="post-title">
+      "<a href="$url$">$title$</a>"
+    </h2>
+    $if(description)$
+    <div class="post-description">
+      $description$
+    </div>
+    $endif$
+  </div>
+$endfor$
+</div>
