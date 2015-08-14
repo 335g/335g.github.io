@@ -161,6 +161,14 @@ h2, .h2 { font-size: 2.5rem; margin-top: 5rem; padding-left: 1.5rem; }
 h3, .h3 { font-size: 2.0rem; margin-top: 5rem; padding-left: 1.5rem; }
 h4, .h4 { font-size: 1.7rem; margin-top: 5rem; padding-left: 1.5rem; }
 
+.h200 img { max-height: 20rem; }
+.h300 img { max-height: 30rem; }
+.h400 img { max-height: 40rem; }
+
+.w200 img { max-width: 20rem; }
+.w300 img { min-width: 30rem; }
+.w400 img { min-width: 40rem; }
+
 /*
  * skeleton support Grid that width exceeds over 550px.
  */
