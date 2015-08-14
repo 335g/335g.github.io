@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>SwiftでZipper - 1</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="../css/skeleton/normalize.css">
+  <link rel="stylesheet" type="text/css" href="../css/skeleton/skeleton.css">
+  <link rel="stylesheet" type="text/css" href="../css/style2.css">
+  <link rel="stylesheet" href="../js/highlight/styles/solarized_dark.css">
+</head>
+
+<body>
+  <div id="contents">
+    <div id="contents-wrap">
+      <div class="post-infos">
+  <div class="posted-date">
+    August 14, 2015
+  </div>
+  <h2 class="post-title">
+    "SwiftでZipper - 1"
+  </h2>
+</div>
+<div id="post-main" class="pt4">
+  <p>久しぶりにHaskellを復習したいという思いから、 <a href="http://learnyouahaskell.com">Learn Haskell You for Great Good!</a>を読み直しています。 ただ読み直すのも面白くないので、Swiftだとどういう実装になるのかという観点で勉強したいと思います。 (playgroundをgithubにアップしていこうと思います。)</p>
+<p>初回は<code>Zipper</code>パターン。いきなり最終章です(笑) というのもXcode7から<code>indirect enum</code>がサポートされたためです。 最初に出てくる木はこのように定義できます。</p>
+<pre class="swift"><code>indirect enum Tree&lt;T&gt;{
+    case Empty
+    case Node(T, Tree&lt;T&gt;, Tree&lt;T&gt;)
+}</code></pre>
+<p>木<code>Tree&lt;T&gt;</code>は枝を示す<code>.Node</code>か、空の状態である<code>.Empty</code>です。 <code>.Node</code>には更に<code>Tree&lt;T&gt;</code>がぶらさがっており、好きなだけぶらさがった状態を表現できます。 本文中に出てくる<code>freeTree</code>はこのように表せます。</p>
+<pre class="swift"><code>let freeTree: Tree&lt;String&gt; =
+    .Node(&quot;P&quot;,
+        .Node(&quot;O&quot;,
+            .Node(&quot;L&quot;,
+                .Node(&quot;N&quot;, .Empty, .Empty),
+                .Node(&quot;T&quot;, .Empty, .Empty)
+            ),
+            .Node(&quot;Y&quot;,
+                .Node(&quot;S&quot;, .Empty, .Empty),
+                .Node(&quot;Y&quot;, .Empty, .Empty)
+            )
+        ),
+        .Node(&quot;L&quot;,
+            .Node(&quot;W&quot;,
+                .Node(&quot;C&quot;, .Empty, .Empty),
+                .Node(&quot;R&quot;, .Empty, .Empty)
+            ),
+            .Node(&quot;A&quot;,
+                .Node(&quot;A&quot;, .Empty, .Empty),
+                .Node(&quot;C&quot;, .Empty, .Empty)
+            )
+        )
+    )</code></pre>
+<p>各枝には要素があり、最下層までいくと<code>.Empty</code>がいます。</p>
+<p>まずは木の状態がグラフィックでわかるようにするため、<code>description</code>メソッドを準備することにします。</p>
+<pre class="swift"><code>extension Tree where T: CustomDebugStringConvertible {
+
+    func description() -&gt; String {
+        return self.description(0, self.stratum(0))
+    }
+
+    func stratum(value: Int) -&gt; Int {
+
+        switch self {
+        case .Empty:
+            return value
+
+        case let .Node(_, l, r):
+            return l.stratum(value) &gt; r.stratum(value) ? l.stratum(value) + 1 : r.stratum(value) + 1
+        }
+    }
+
+    func description(stratum: Int, _ total: Int) -&gt; String {
+        let space = &quot;__&quot;
+        var pre = &quot;&quot;
+        var post = &quot;&quot;
+
+        for (var i = 0; i &lt; stratum; i++){
+            pre += space
+        }
+        for (var i = 1; i &lt; total - stratum; i++){
+            post += space
+        }
+
+        switch self {
+        case .Empty:
+            return &quot;&quot;
+
+        case let .Node(x, l, r):
+            return pre + x.debugDescription + post + &quot;\n&quot; + l.description(stratum + 1, total) + r.description(stratum + 1, total)
+        }
+    }
+}</code></pre>
+<p>これによりさきほどの<code>freeTree</code>はplayground上でこんな感じに出力されます。</p>
+<div class="h400">
+<img src="../images/150815-0001.png" />
+</div>
+<p>それでは本文の流れに沿って進めます。 まずは<code>w</code>の要素を<code>p</code>に変えましょう。 そのままやろうとするとこんな感じになります。</p>
+<pre class="swift"><code>func changeToP(tree: Tree&lt;String&gt;) -&gt; Tree&lt;String&gt; {
+    guard case let .Node(x, l, tree2) = tree else {
+        return tree
+    }
+    guard case let .Node(y, tree3, r) = tree2 else {
+        return tree
+    }
+    guard case let .Node(_, m, n) = tree3 else {
+        return tree
+    }
+
+    return .Node(x, l, .Node(y, .Node(&quot;P&quot;, m, n), r))
+}</code></pre>
+<p><code>guard</code>文の中身は<code>fatalError</code>にするとか、 もしくは返り値を<code>Tree&lt;String&gt;?</code>にしてnil返すとかも考えられますが、 本筋ではないのでとりあえず同じ<code>Tree&lt;String&gt;</code>を返すことにします。</p>
+<p>機能しているのを確認するとこんな感じ。</p>
+<div class="h400">
+<img src="../images/150815-0002.png" />
+</div>
+<p>この関数をもう少しだけ一般的にします。 トップからたどって行って変えたい場所を引数として与えてやります</p>
+<pre class="swift"><code>enum Direction: String {
+    case L
+    case R
+}
+
+func _changeToP(directions: [Direction]) -&gt; Tree&lt;String&gt; -&gt; Tree&lt;String&gt; {
+    return { tree in
+        if let direction: Direction = directions.first {
+
+            var dirs = directions
+            dirs.removeFirst()
+
+            switch direction {
+            case .L:
+                switch tree {
+                case let .Node(x, l, r):
+                    return .Node(x, _changeToP(dirs)(l), r)
+
+                case .Empty:
+                    return .Empty
+                }
+
+            case .R:
+                switch tree {
+                case let .Node(x, l, r):
+                    return .Node(x, l, _changeToP(dirs)(r))
+
+                case .Empty:
+                    return .Empty
+                }
+            }
+        }else {
+            switch tree {
+            case let .Node(_, l, r):
+                return .Node(&quot;P&quot;, l, r)
+
+            case .Empty:
+                return .Empty
+            }
+        }
+    }
+}</code></pre>
+<p>これで少しだけ柔軟になりました。変更する位置を<code>[Direction]</code>で指定できるからです。</p>
+<div class="h400">
+<img src="../images/150815-0003.png" />
+</div>
+<p>ここで定義した<code>[Direction]</code>は方向を示したリストです。 トップ階層からどのように移動してきたのかを意味します。 つまり<code>[Direction]</code>の<code>index0</code>の要素は直前にどのように移動したかを表しています。 これは木を逆方向にたどるのに使えそうです。 改めて<code>Breadcrumbs</code>として定義することにします。</p>
+<pre class="swift"><code>typealias Breadcrumbs = [Direction]</code></pre>
+<p>部分木<code>Tree&lt;T&gt;</code>と移動履歴<code>Breadcrumbs</code>をタプルとしてワンセットに扱うことにします。 これにより木を左に操作したり右に操作したりができるようになります。</p>
+<pre class="swift"><code>func goLeft&lt;T&gt;(tree: Tree&lt;T&gt;, _ crumbs: Breadcrumbs) -&gt; (Tree&lt;T&gt;, Breadcrumbs){
+    switch tree {
+    case let .Node(_, l, _):
+        var insertedCrumbs = crumbs
+        insertedCrumbs.insert(.L, atIndex: 0)
+
+        return (l, insertedCrumbs)
+
+    case .Empty:
+        return (.Empty, crumbs)
+    }
+}
+
+func goRight&lt;T&gt;(tree: Tree&lt;T&gt;, _ crumbs: Breadcrumbs) -&gt; (Tree&lt;T&gt;, Breadcrumbs){
+    switch tree {
+    case let .Node(_, _, r):
+        var insertedCrumbs = crumbs
+        insertedCrumbs.insert(.R, atIndex: 0)
+
+        return (r, insertedCrumbs)
+
+    case .Empty:
+        return (.Empty, crumbs)
+    }
+}</code></pre>
+<p>それぞれ<code>goLeft()</code>は左側の部分木に移動する関数、<code>goRight()</code>は右側の部分木に移動する関数です。 返り値には<code>Breadcrumbs</code>が含まれており、どちらに移動したのかが情報として含まれます。</p>
+<p><code>Breadcrumbs</code>にも<code>description()</code>を以下のように定義して結果を参照しやすくしておきます。</p>
+<pre class="swift"><code>extension SequenceType where Self.Generator.Element == Direction {
+    func description() -&gt; String {
+        return self.reduce(&quot;&quot;){ (str: String, dir: Direction) -&gt; String in
+            return str + dir.description()
+        }
+    }
+}</code></pre>
+<p>すると、<code>goLeft()</code>は以下のようになります。</p>
+<div class="h400">
+<img src="../images/150815-0004.png" />
+</div>
+<p>左側の部分木のみ出力され、なおかつ<code>Breadcrumbs</code>には<code>.L</code>が入っていることがわかります。</p>
+<p>しかしこれもまた直感的ではありません。例えば、右に行って左に行く場合</p>
+<pre class="swift"><code>goLeft(goRight(freeTree, []))
+</code></pre>
+<p>のように実際の移動に対して後ろから記述しなければならないからです。 しかしこれは演算子を定義することでリフトできます。</p>
+<pre class="swift"><code>infix operator |&gt; {
+    associativity left
+}
+
+func |&gt; &lt;T&gt;(lhs: (Tree&lt;T&gt;, Breadcrumbs), rhs: (Tree&lt;T&gt;, Breadcrumbs) -&gt; (Tree&lt;T&gt;, Breadcrumbs)) -&gt; (Tree&lt;T&gt;, Breadcrumbs){
+    return rhs(lhs)
+}</code></pre>
+<p>これにより、先ほどの操作は</p>
+<pre class="swift"><code>(freeTree, []) |&gt; goRight |&gt; goLeft</code></pre>
+<p>のように書くことができます。実際に確認してみるとこんな感じになります。</p>
+<div class="h400">
+<img src="../images/150815-0006.png" />
+</div>
+<p>もちろん、カスタム演算子を用いない方法もあります。 それは<code>Tree&lt;T&gt;</code>と<code>Breadcrumbs</code>の両方を管理する型を別に定義します。</p>
+<pre class="swift"><code>struct TreeInfo&lt;T&gt; {
+    let tree: Tree&lt;T&gt;
+    let crumbs: Breadcrumbs
+
+    init(_ tree: Tree&lt;T&gt;, _ crumbs: Breadcrumbs){
+        self.tree = tree
+        self.crumbs = crumbs
+    }
+
+    func goLeft() -&gt; TreeInfo&lt;T&gt; {
+        switch tree {
+        case let .Node(_, l, _):
+            var insertedCrumbs = crumbs
+            insertedCrumbs.insert(.L, atIndex: 0)
+
+            return TreeInfo(l, insertedCrumbs)
+
+        case .Empty:
+            return TreeInfo(.Empty, crumbs)
+        }
+    }
+
+    func goRight() -&gt; TreeInfo&lt;T&gt; {
+        switch tree {
+        case let .Node(_, _, r):
+            var insertedCrumbs = crumbs
+            insertedCrumbs.insert(.R, atIndex: 0)
+
+            return TreeInfo(r, insertedCrumbs)
+
+        case .Empty:
+            return TreeInfo(.Empty, crumbs)
+        }
+    }
+}
+
+extension TreeInfo where T: CustomDebugStringConvertible {
+    func description() -&gt; String {
+        return tree.description() + &quot;\n&quot; + crumbs.description()
+    }
+}</code></pre>
+<p>これで<code>goLeft()</code>と<code>goRight()</code>は自身と同じ型のオブジェクトを返すインスタンスメソッドになりました。</p>
+<div class="h200">
+<img src="../images/150815-0007.png" />
+</div>
+<p>逆方向にたどるのは次回にします。</p>
+<h3 id="参考">参考</h3>
+<ul>
+<li><a href="http://learnyouahaskell.com/zippers">Zippers - Learn Haskell You for Great Good!</a></li>
+</ul>
+</div>
+
+    </div>
+  </div>
+
+  <footer id="footer">
+    <div id="footer-wrap">
+      <div class="container">
+        <div class="row icons">
+          <div class="one-third column">
+            <a href="http://335g.github.io">
+              <i class="fa fa-home fa-lg"></i>
+            </a>
+          </div>
+          <div class="one-third column">
+            <a href="http://github.com/335g">
+              <i class="fa fa-github-alt fa-lg"></i>
+            </a>
+          </div>
+          <div class="one-third column">
+            <a href="http://twitter.com/335g">
+              <i class="fa fa-twitter fa-lg"></i>
+            </a>
+          </div>
+        </div>
+        <div class-"row copyright">
+          <div class="copyright">
+              2015 © 335g .
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- highlight.js -->
+  <script src="../js/highlight/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+
+</body>
+</html>
