@@ -13,7 +13,7 @@ tags: Haskell, Hakyll, stack, Travis
 
 できたのが[本ブログ](https://github.com/335g/335g.github.io)。
 
-## Stack
+### Stack
 
 [Stack](https://github.com/commercialhaskell/stack)は、
 Haskellのパッケージをビルドしたりインストールしたりするツールです。
@@ -22,7 +22,7 @@ Haskellのパッケージをビルドしたりインストールしたりする�
 Haskell力のない自分にはcabal hellを乗り越えられる自信が無かったという理由と、
 タイムリーなので使ってみたいという理由から選択してみました。
 
-## Hakyll
+### Hakyll
 
 [Hakyll](http://jaspervdj.be/hakyll/)は、
 Haskellによる静的htmlページ生成ツールです。
@@ -44,18 +44,18 @@ ghc --make site.hs
 具体的には`site.hs`を見ながら[チュートリアル](http://jaspervdj.be/hakyll/tutorials.html)を読んでみてください。
 シンプルな構成になっているのでなんとなくであればすぐに理解できると思います。(自分もまだ理解不足ですが)
 
-## Travis
+### Travis
 
 [Travis CI](https://travis-ci.org)はCIを行うためのサービスです。
 [Stackを用いるための設定方法](https://github.com/commercialhaskell/stack/wiki/Travis)が公開されています。
 
-## Github Pages
+### Github Pages
 
 [Github Pages](https://pages.github.com)はユーザやリポジトリ毎に提供されるWebページ公開サービスです。
 ソースはGithubのリポジトリで管理します。注意が必要なのは最上階層に`index.html`が必要ということでしょうか。
 Hakyllでは`_site`にhtmlが生成されるからです。
 
-## 記事作成 〜 公開 の流れ
+### 記事作成 〜 公開 の流れ
 
 Hakyllでは`_site`ディレクトリにコードを生成するが、最上階層に`index.html`が必要という問題を
 git submoduleで吸収します。また、ついでにTravisにコード生成もやってもらいます。
@@ -266,7 +266,7 @@ notifications:
 Travis内で`stack build`するため初回は時間がかかります。
 2回目以降はキャッシュされたものを使うため時間が短縮されます。
 
-## 公開
+### 公開
 
 ここまで設定しておけばpushすることで公開されます。
 
@@ -274,7 +274,7 @@ Travis内で`stack build`するため初回は時間がかかります。
 git push origin source
 ```
 
-## まとめ(感想)
+### まとめ(感想)
 
 stackもTravisも初めてで、Haskell久しぶりな状態だったため時間がかかりましたが、
 作業量はそれほどではありませんでした。心配していたcabal hellも起きませんでしたし、
@@ -287,5 +287,5 @@ stackもTravisも初めてで、Haskell久しぶりな状態だったため時�
 - ブログ書くモチベーションが続けば良いな
 
 ### 参考
-- (1) [Hakyllを使ってGitHub Pagesを作成して、そのソースも管理して、Travis CIで自動デプロイする](http://imokuri123.com/blog/2015/04/create-github-pages-with-hakyll.html)
-- (2) [Haskellのビルドツール"stack"の紹介 - Qiita](http://qiita.com/tanakh/items/6866d0f570d0547df026)
+- [Hakyllを使ってGitHub Pagesを作成して、そのソースも管理して、Travis CIで自動デプロイする](http://imokuri123.com/blog/2015/04/create-github-pages-with-hakyll.html)
+- [Haskellのビルドツール"stack"の紹介 - Qiita](http://qiita.com/tanakh/items/6866d0f570d0547df026)
