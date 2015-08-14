@@ -33,20 +33,20 @@
 <li>ソースファイルはGithubの公開リポジトリで管理し、Github Pagesで公開する。</li>
 </ul>
 <p>できたのが<a href="https://github.com/335g/335g.github.io">本ブログ</a>。</p>
-<h2 id="stack">Stack</h2>
+<h3 id="stack">Stack</h3>
 <p><a href="https://github.com/commercialhaskell/stack">Stack</a>は、 Haskellのパッケージをビルドしたりインストールしたりするツールです。 <a href="https://twitter.com/tanakh">tanakh</a>さんによる <a href="http://qiita.com/tanakh/items/6866d0f570d0547df026">紹介記事</a>をきっかけに知りました。 Haskell力のない自分にはcabal hellを乗り越えられる自信が無かったという理由と、 タイムリーなので使ってみたいという理由から選択してみました。</p>
-<h2 id="hakyll">Hakyll</h2>
+<h3 id="hakyll">Hakyll</h3>
 <p><a href="http://jaspervdj.be/hakyll/">Hakyll</a>は、 Haskellによる静的htmlページ生成ツールです。 RubyによるJekyllにインスパイアされた作られたとか。</p>
 <pre><code>hakyll-init &quot;site&quot;</code></pre>
 <p>とすることで<code>site</code>というディレクトリ内に必要なファイル一式が生成されます。 あとは、</p>
 <pre><code>ghc --make site.hs
 ./site build</code></pre>
 <p>と実行すれば<code>_site</code>ディレクトリ内にhtml及びcss等の必要ファイル一式が生成されます。 具体的には<code>site.hs</code>を見ながら<a href="http://jaspervdj.be/hakyll/tutorials.html">チュートリアル</a>を読んでみてください。 シンプルな構成になっているのでなんとなくであればすぐに理解できると思います。(自分もまだ理解不足ですが)</p>
-<h2 id="travis">Travis</h2>
+<h3 id="travis">Travis</h3>
 <p><a href="https://travis-ci.org">Travis CI</a>はCIを行うためのサービスです。 <a href="https://github.com/commercialhaskell/stack/wiki/Travis">Stackを用いるための設定方法</a>が公開されています。</p>
-<h2 id="github-pages">Github Pages</h2>
+<h3 id="github-pages">Github Pages</h3>
 <p><a href="https://pages.github.com">Github Pages</a>はユーザやリポジトリ毎に提供されるWebページ公開サービスです。 ソースはGithubのリポジトリで管理します。注意が必要なのは最上階層に<code>index.html</code>が必要ということでしょうか。 Hakyllでは<code>_site</code>にhtmlが生成されるからです。</p>
-<h2 id="記事作成-公開-の流れ">記事作成 〜 公開 の流れ</h2>
+<h3 id="記事作成-公開-の流れ">記事作成 〜 公開 の流れ</h3>
 <p>Hakyllでは<code>_site</code>ディレクトリにコードを生成するが、最上階層に<code>index.html</code>が必要という問題を git submoduleで吸収します。また、ついでにTravisにコード生成もやってもらいます。</p>
 <ul>
 <li>あらかじめ<code>_site</code>ディレクトリをsubmoduleに追加しておく</li>
@@ -170,10 +170,10 @@ notifications:
   email: false</code></pre>
 <p>具体的には、 <code>script:</code>内でビルドし<code>hakyll</code>でhtmlファイルを生成しています。 また、<code>after_success:</code>内でgithubにpushしています。</p>
 <p>Travis内で<code>stack build</code>するため初回は時間がかかります。 2回目以降はキャッシュされたものを使うため時間が短縮されます。</p>
-<h2 id="公開">公開</h2>
+<h3 id="公開">公開</h3>
 <p>ここまで設定しておけばpushすることで公開されます。</p>
 <pre><code>git push origin source</code></pre>
-<h2 id="まとめ感想">まとめ(感想)</h2>
+<h3 id="まとめ感想">まとめ(感想)</h3>
 <p>stackもTravisも初めてで、Haskell久しぶりな状態だったため時間がかかりましたが、 作業量はそれほどではありませんでした。心配していたcabal hellも起きませんでしたし、 チャンスがあればまたstack使ってみたいと思います。</p>
 <ul>
 <li>Stack便利</li>
@@ -184,12 +184,8 @@ notifications:
 </ul>
 <h3 id="参考">参考</h3>
 <ul>
-<li><ol style="list-style-type: decimal">
 <li><a href="http://imokuri123.com/blog/2015/04/create-github-pages-with-hakyll.html">Hakyllを使ってGitHub Pagesを作成して、そのソースも管理して、Travis CIで自動デプロイする</a></li>
-</ol></li>
-<li><ol start="2" style="list-style-type: decimal">
 <li><a href="http://qiita.com/tanakh/items/6866d0f570d0547df026">Haskellのビルドツール“stack”の紹介 - Qiita</a></li>
-</ol></li>
 </ul>
 </div>
 
