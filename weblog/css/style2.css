@@ -148,6 +148,17 @@ footer .copyright {
   color: #404040;
 }
 
+blockquote {
+  margin: 2rem 1rem;
+  padding: 1.0rem 0.5rem;
+  background-color: #F0F0F0;
+  border-left: solid 5px #C0C0C0;
+}
+
+blockquote p {
+  margin-bottom: 0rem;
+}
+
 ul {
   padding-left: 1rem;
 }
@@ -164,6 +175,9 @@ h4, .h4 { font-size: 1.7rem; margin-top: 5rem; padding-left: 1.5rem; }
 .h200 img { max-height: 20rem; }
 .h300 img { max-height: 30rem; }
 .h400 img { max-height: 40rem; }
+.h500 img { max-height: 50rem; }
+.h600 img { max-height: 60rem; }
+.h700 img { max-height: 70rem; }
 
 .w200 img { max-width: 20rem; }
 .w300 img { min-width: 30rem; }
