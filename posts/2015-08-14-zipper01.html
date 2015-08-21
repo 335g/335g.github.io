@@ -243,7 +243,7 @@ func |&gt; &lt;T&gt;(lhs: (Tree&lt;T&gt;, Breadcrumbs), rhs: (Tree&lt;T&gt;, Bre
             return TreeInfo(l, insertedCrumbs)
 
         case .Empty:
-            return TreeInfo(.Empty, crumbs)
+            return self
         }
     }
 
@@ -256,7 +256,7 @@ func |&gt; &lt;T&gt;(lhs: (Tree&lt;T&gt;, Breadcrumbs), rhs: (Tree&lt;T&gt;, Bre
             return TreeInfo(r, insertedCrumbs)
 
         case .Empty:
-            return TreeInfo(.Empty, crumbs)
+            return self
         }
     }
 }

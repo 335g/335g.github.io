@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>SwiftでZipper - 2</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="../css/skeleton/normalize.css">
+  <link rel="stylesheet" type="text/css" href="../css/skeleton/skeleton.css">
+  <link rel="stylesheet" type="text/css" href="../css/style2.css">
+  <link rel="stylesheet" href="../js/highlight/styles/solarized_dark.css">
+</head>
+
+<body>
+  <div id="contents">
+    <div id="contents-wrap">
+      <div class="post-infos">
+  <div class="posted-date">
+    August 21, 2015
+  </div>
+  <h2 class="post-title">
+    "SwiftでZipper - 2"
+  </h2>
+</div>
+<div id="post-main" class="pt4">
+  <p><a href="../posts/2015-08-14-zipper01.html">前回</a>の続き。 前回は<code>goLeft</code>と<code>goRight</code>を実装し、部分木をたどっていくことに成功しました。 では次に逆方向に戻る事を考えましょう。といってもこのままでは戻れません。 それは情報が足りないからです。</p>
+<p>今一度<code>goLeft()</code>の実装を振り返ります。</p>
+<pre class="swift"><code>func goLeft() -&gt; TreeInfo&lt;T&gt; {
+    switch tree {
+    case let .Node(_, l, _):
+        var insertedCrumbs = crumbs
+        insertedCrumbs.insert(.L, atIndex: 0)
+
+        return TreeInfo(l, insertedCrumbs)
+
+    case .Empty:
+        return self
+    }
+}</code></pre>
+<p>注目すべきは3行目のcase文。次に着目する部分木以外の情報を廃棄しているのです。 逆方向に戻るためには、着目する部分木以外の情報も保持しないとなりません。そのため、 以下のように定義を変更します。</p>
+<pre class="swift"><code>/// Old --------------------------
+enum Direction: String {
+    case L
+    case R
+}
+
+typealias Breadcrumbs = [Direction]
+
+struct TreeInfo&lt;T&gt; {
+    let tree: Tree&lt;T&gt;
+    let crumbs: Breadcrumbs
+
+    ...
+}
+
+/// New --------------------------
+enum Crumb&lt;T&gt; {
+    case LeftCrumb(T, Tree&lt;T&gt;)
+    case RightCrumb(T, Tree&lt;T&gt;)
+}
+
+struct Zipper&lt;T&gt; {
+    let tree: Tree&lt;T&gt;
+    let crumbs: [Crumb&lt;T&gt;]
+
+    ...
+}</code></pre>
+<p>LかRという情報しか無かったのですが、要素と<code>Tree&lt;T&gt;</code>を持ちます。これは分岐する箇所の要素と、 移動しない方向の木を表します。　</p>
+<p>新しく定義した<code>Zipper&lt;T&gt;</code>を用いてまずは<code>goLeft()</code>を書き直します。 前回の<code>goLeft()</code>も併記して何が変わったのか確認しましょう。</p>
+<pre class="swift"><code>/// Old
+func goLeft() -&gt; TreeInfo&lt;T&gt; {
+    switch tree {
+    case let .Node(_, l, _):
+        var insertedCrumbs = crumbs
+        insertedCrumbs.insert(.L, atIndex: 0)
+
+        return TreeInfo(l, insertedCrumbs)
+
+    case .Empty:
+        return self
+    }
+}
+
+/// New
+func goLeft() -&gt; Zipper&lt;T&gt; {
+    switch tree {
+    case let .Node(x, l, r):
+        var insertedCrumbs = crumbs
+        insertedCrumbs.insert(.LeftCrumb(x, r), atIndex: 0)
+
+        return Zipper(l, insertedCrumbs)
+
+    case .Empty:
+        return self
+    }
+}</code></pre>
+<p>このように比較するとあまり違いがないことは明白です。 <code>.L</code>を作成する箇所で、無視していた要素を使って<code>.LeftCrumbs(x, r)</code>を作成しているぐらいです。</p>
+<p>これで逆方向に戻る準備はできました。逆方向に戻るインスタンスメソッド<code>goUp()</code>はこのように書けます。</p>
+<pre class="swift"><code>func goUp() -&gt; Zipper&lt;T&gt; {
+    guard let latest = crumbs.first else {
+        return self
+    }
+
+    var deletedCrumbs = crumbs
+    deletedCrumbs.removeFirst()
+
+    switch latest {
+    case let .LeftCrumb(x, r):
+        return Zipper(.Node(x, self.tree, r), deletedCrumbs)
+
+    case let .RightCrumb(x, l):
+        return Zipper(.Node(x, l, self.tree), deletedCrumbs)
+    }
+}</code></pre>
+<p>先ほどの<code>goLeft()</code>を見るとわかる通り、<code>crumbs.first</code>に直前の移動パターンを入れています。そのため、 <code>crumbs.first == nil</code>の場合は既に最上階層にいる場合であるため<code>self</code>を返し、 それ以外は<code>crumbs.first</code>が<code>.LeftCrumb</code>か<code>.RightCrumb</code>かに応じて新しく<code>Zipper</code>を作って返します。 その時<code>crumbs.first</code>に上階層の情報が入っているため上階層に戻れるわけです。</p>
+<p><code>goUp()</code>を用いれば一気に最上階層に行くメソッド<code>topMost()</code>も簡単に実装できます。</p>
+<pre class="swift"><code>func topMost() -&gt; Zipper&lt;T&gt; {
+    guard let _ = crumbs.first else {
+        return self
+    }
+
+    return self.goUp().topMost()
+}</code></pre>
+<p><code>crumbs.first</code>が無くなるまで<code>self.goUp().topMost()</code>を繰り返せばいいわけです。</p>
+<p>ついでに今いる階層の要素を書き換えるインスタンスメソッド<code>modify()</code>を作成してみます。</p>
+<pre class="swift"><code>func modify(f: T -&gt; T) -&gt; Zipper&lt;T&gt; {
+    switch tree {
+    case let .Node(x, l, r):
+        return Zipper(.Node(f(x), l, r), self.crumbs)
+
+    case .Empty:
+        return self
+    }
+}
+
+func modify(x: T) -&gt; Zipper&lt;T&gt; {
+    return self.modify{ _ in x }
+}</code></pre>
+<p>これにより例えば右に行って左に行って、そこの要素を書き換えてトップまで戻ってきた木はこのように書けます。</p>
+<div class="h700">
+<img src="../images/150821-0001.png" />
+</div>
+<p>非常にシンプルな記述です。</p>
+<p>以上でZipperの解説は終わります。 これらがなぜZipperと呼ばれるかは、</p>
+<blockquote>
+<p>こうしてみるとZipperという名前の由来にも納得がいきますね。 ジッパーのスライダーが上下に動いている様子にほんとそっくりです。</p>
+</blockquote>
+<p>とのこと。確かに。</p>
+<h3 id="参考">参考</h3>
+<ul>
+<li><a href="http://learnyouahaskell.com/zippers">Zippers - Learn Haskell You for Great Good!</a></li>
+</ul>
+</div>
+
+    </div>
+  </div>
+
+  <footer id="footer">
+    <div id="footer-wrap">
+      <div class="container">
+        <div class="row icons">
+          <div class="one-third column">
+            <a href="http://335g.github.io">
+              <i class="fa fa-home fa-lg"></i>
+            </a>
+          </div>
+          <div class="one-third column">
+            <a href="http://github.com/335g">
+              <i class="fa fa-github-alt fa-lg"></i>
+            </a>
+          </div>
+          <div class="one-third column">
+            <a href="http://twitter.com/335g">
+              <i class="fa fa-twitter fa-lg"></i>
+            </a>
+          </div>
+        </div>
+        <div class-"row copyright">
+          <div class="copyright">
+              2015 © 335g .
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- highlight.js -->
+  <script src="../js/highlight/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+
+</body>
+</html>
