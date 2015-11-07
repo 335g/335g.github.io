@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Swift</title>
+  <title>Carthageでμframeworkをお試しする</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
@@ -16,30 +16,26 @@
 <body>
   <div id="contents">
     <div id="contents-wrap">
-      
-
-<div id="posts-wrap">
-
-  <div class="post-infos">
-    <div class="posted-date">
-      August 21, 2015
-    </div>
-    <h2 class="post-title">
-      <a href="../posts/2015-08-21-zipper02.html">SwiftでZipper - 2</a>
-    </h2>
-    
+      <div class="post-infos">
+  <div class="posted-date">
+    November  7, 2015
   </div>
-
-  <div class="post-infos">
-    <div class="posted-date">
-      August 14, 2015
-    </div>
-    <h2 class="post-title">
-      <a href="../posts/2015-08-14-zipper01.html">SwiftでZipper - 1</a>
-    </h2>
-    
-  </div>
-
+  <h2 class="post-title">
+    Carthageでμframeworkをお試しする
+  </h2>
+</div>
+<div id="post-main" class="pt4">
+  <p>githubで面白そうなframeworkを見つけたとします。ドキュメントがあればまずはそれを読むでしょう。それで使い方や特徴が全て理解できれば良いのですが、なかなかそうもいかないところ。最近ではplaygroundでドキュメントを書いてくれているものもあり、わかりやすくはなっているのですがそれでもやはり自分で手を動かさないとわかりづらいというものです。</p>
+<p>iOS界隈のframework管理といえばCocoaPodsだったのですが、最近ではCarthageが盛んです。このCarthageを使うと手軽にお試しできるので手順を記しておきます。簡単で説明することが無いですね(笑)</p>
+<h3 id="手順">手順</h3>
+<ul>
+<li>Cartfile を用意する</li>
+<li><code>carthage update</code></li>
+<li>workspace を作成する</li>
+<li><code>Carhage/Checkouts</code> 内にある xcodeproj を workspace で読み込む</li>
+<li>workspace 内に playground 作ってお試しする</li>
+</ul>
+<p>以上で playground 内で読み込んで使うことができます。</p>
 </div>
 
     </div>
