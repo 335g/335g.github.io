@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Functors in Swift</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="../css/skeleton/normalize.css">
+  <link rel="stylesheet" type="text/css" href="../css/skeleton/skeleton.css">
+  <link rel="stylesheet" type="text/css" href="../css/style2.css">
+  <link rel="stylesheet" href="../js/highlight/styles/solarized_dark.css">
+</head>
+
+<body>
+  <div id="contents">
+    <div id="contents-wrap">
+      <div class="post-infos">
+  <div class="posted-date">
+    November 29, 2015
+  </div>
+  <h2 class="post-title">
+    Functors in Swift
+  </h2>
+</div>
+<div id="post-main" class="pt4">
+  <p>最近<a href="https://hackage.haskell.org/package/Chart-1.1/docs/Control-Lens-Prism.html">Prism</a>の勉強をしています。 勉強といってもHaskell力がさほどないのでコードとにらめっこしている時間が長いのですが。 その途中で<a href="https://www.fpcomplete.com/user/liyang/profunctors">面白い記事</a>を見つけました。 Haskellで出てくる様々なFunctorを紹介した記事です。今回はこれらをSwiftで定義してみようという記事です。</p>
+<ol style="list-style-type: decimal">
+<li><a href="#covariant-functors">Covariant Functors</a></li>
+<li><a href="#contravariant-functors">ContraVariant Functors</a></li>
+<li><a href="#bifunctors">Bifunctors</a></li>
+<li><a href="#profunctors">Profunctors</a></li>
+</ol>
+<h3 id="covariant-functors">Covariant Functors</h3>
+<p>通常のFunctorのことです。Haskellでは以下のように表記します。</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">class</span> <span class="dt">Functor</span> f <span class="kw">where</span>
+<span class="ot">  fmap ::</span> (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> f a <span class="ot">-&gt;</span> f b</code></pre>
+<p><code>f a</code>という型が<code>fmap</code>により<code>f b</code>という型になリます。 Swiftっぽく説明するため図解するとこんな感じでしょうか。</p>
+<pre><code>             f
+    A +--------------&gt; B
+  X&lt;A&gt;               X&lt;B&gt;</code></pre>
+<p><code>A</code>というジェネリックパラメータを持つ型<code>X&lt;A&gt;</code>が関数<code>f(x: A) -&gt; B</code>とともに 新たな型<code>X&lt;B&gt;</code>へとマップされます。Swiftでは様々な<code>Protocol</code>で<code>map</code>が実装されているため 馴染み深いと思います。Haskellで<code>Functor</code>クラスとして定義しているのに対し、 Swiftでは様々な<code>Protocol</code>で<code>map</code>が実装されています。 これはジェネリックパラメータが異なる型を<code>Protocol</code>で表現できないためです。</p>
+<pre class="swift"><code>// × Functor&lt;T&gt;という表記ができない (Swift2.1現在)
+
+protcol Functor&lt;T&gt; {
+  func map&lt;U&gt;(f: T -&gt; U) -&gt; Functor&lt;U&gt;
+}</code></pre>
+<p>そのため、<code>CollectionType</code>の<code>map</code>がリストを返さざるをえないのはなんとも残念な感じです。</p>
+<pre class="swift"><code>// ex. CollectionType
+func map&lt;T&gt;(@noescape transform: (Self.Base.Generator.Element) -&gt; T) -&gt; [T]</code></pre>
+<p>ただし、抽象化してしまうと<code>default implementation</code>が機能しなくなるため、 <code>default implementation</code>を使うという方針が変わらない限りこのような抽象化はされないような 気がします。</p>
+<h3 id="contravariant-functors">Contravariant Functors</h3>
+<p>次に<code>Contravariant</code>クラス。</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">class</span> <span class="dt">Contravariant</span> f <span class="kw">where</span>
+<span class="ot">  contramap ::</span> (b <span class="ot">-&gt;</span> a) <span class="ot">-&gt;</span> f a <span class="ot">-&gt;</span> f b</code></pre>
+<p>まず図解してみます。</p>
+<pre><code>             f
+    B +--------------&gt; A
+  X&lt;A&gt;               X&lt;B&gt;</code></pre>
+<p>先ほどとの違いは、mapする時の関数<code>f</code>における引数と返り値の型が逆になっていることです。 これを満足できるような型としては、ジェネリックパラメータの型を引数にとるような関数を 持っている場合が挙げられます。具体例を書くとこんな感じ。</p>
+<pre class="swift"><code>struct Predicate&lt;T&gt; {
+	let getPredicate: T -&gt; Bool
+
+	func contramap&lt;U&gt;(g: U -&gt; T) -&gt; Predicate&lt;U&gt; {
+		return Predicate&lt;U&gt;(getPredicate: { self.getPredicate(g($0)) })
+	}
+}
+
+let odd: Predicate&lt;Int&gt; = Predicate(getPredicate: { $0 % 2 != 0 })
+let str: Predicate&lt;String&gt; = odd.contramap{ $0.characters.count }</code></pre>
+<h3 id="bifunctors">Bifunctors</h3>
+<p>次に<code>Bifunctor</code>クラス。</p>
+<pre class="hasekll"><code>class Bifunctor f where
+  bimap :: (a -&gt; b) -&gt; (c -&gt; d) -&gt; f a c -&gt; f b d</code></pre>
+<p><code>Bifunctor</code>クラスは2つの型引数を取るクラスです。 (3つ取るのを<code>trifunctors</code>と表記するらしい) まずはこれも図解してみます。</p>
+<pre><code>               f
+      A +--------------&gt; B
+        |              |
+        |              |
+X&lt;A, C&gt; |              | X&lt;B, D&gt;
+        |              |
+        |              |
+      C +--------------&gt; D
+               g</code></pre>
+<p><code>f :: a -&gt; b</code>と<code>g :: c -&gt; d</code>を引数に取り、<code>f a c</code>から<code>f b d</code>にマップします。 Swiftっぽい表記をするならば、<code>f&lt;A, B&gt;(a: A) -&gt; B</code>と<code>g&lt;C, D&gt;(c: C) -&gt; D</code>の 2つの関数により、<code>X&lt;A, C&gt;</code>から<code>X&lt;B, D&gt;</code>にマップすると言うことになります。</p>
+<p>Swiftで2つのtype parameterをセットにとるものとして<code>Either&lt;T, U&gt;</code>がよく用いられます。</p>
+<pre class="swift"><code>enum Either&lt;A, C&gt; {
+	case Left(A)
+	case Right(C)
+
+	func bimap&lt;B, D&gt;(f: A -&gt; B)(_ g: C -&gt; D) -&gt; Either&lt;B, D&gt; {
+		switch self {
+		case .Left(let x):
+			return .Left(f(x))
+		case .Right(let x):
+			return .Right(g(x))
+		}
+	}
+}
+
+let left: Either&lt;String, String&gt; = Either.Left(&quot;0&quot;)
+let right: Either&lt;String, String&gt; = Either.Right(&quot;0.0&quot;)
+let f: String -&gt; Int = { Int($0)! + 1 }
+let g: String -&gt; Float = { Float($0)! + 2.0 }
+
+left.bimap(f)(g)  // Either&lt;Int, Float&gt;.Left(1)
+right.bimap(f)(g) // Either&lt;Int, Float&gt;.Right(2.0)</code></pre>
+<h3 id="profunctors">Profunctors</h3>
+<p>最後に<code>Profunctor</code>です。</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">class</span> <span class="dt">Profunctor</span> f <span class="kw">where</span>
+<span class="ot">  dimap ::</span> (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> (c <span class="ot">-&gt;</span> d) <span class="ot">-&gt;</span> f b c <span class="ot">-&gt;</span> f a d</code></pre>
+<pre><code>               f
+      B &lt;--------------+ A
+        |              |
+        |              |
+X&lt;B, C&gt; |              | X&lt;A, D&gt;
+        |              |
+        |              |
+      C +--------------&gt; D
+               g</code></pre>
+<p><code>Profunctor</code>クラスも2つの型引数を取るクラスです。 <code>Bifunctor</code>の図と見比べてもらえばわかるように、上の矢印の向きが逆になっています。 <code>Covariant</code>に対する<code>Contravariant</code>のような感じですね。</p>
+<p>Haskellにおける具体例としては<code>(-&gt;)</code>が挙げられています。 <code>(-&gt;)</code>は関数の中置き表示でして、<code>A-&gt;B-&gt;C-&gt;D</code>という風にぐるっと回ってこれるというものです。 詳しくは参照ページにて解説してもらうとして、Swiftではどう書けるのか。</p>
+<p>どのようなサンプルが説明に適しているのかわからなかったのですが、以下のように<code>dimap</code>が定義可能です。</p>
+<pre class="swift"><code>struct Indexed&lt;I, A, B&gt; {
+	let runIndexed: I -&gt; A -&gt; B
+
+	func dimap&lt;C, D&gt;(f: C -&gt; A)(_ g: B -&gt; D) -&gt; Indexed&lt;I, C, D&gt; {
+		return Indexed&lt;I, C, D&gt;(runIndexed: { index in
+			return { g(self.runIndexed(index)(f($0))) }
+		})
+	}
+}</code></pre>
+<p>ここで定義した<code>Indexed&lt;I, A, B&gt;</code>が関数<code>dimap(f)(g)</code>により <code>Indexed&lt;I, C, D&gt;</code>にマップされます。</p>
+<p>応用事例などはこれから勉強します。</p>
+<h3 id="参考">参考</h3>
+<ul>
+<li><a href="https://www.fpcomplete.com/school/to-infinity-and-beyond/pick-of-the-week/profunctors">I love profunctors. They’re so easy. - FPComplete</a></li>
+<li><a href="http://kinokkory.hatenablog.com/entry/20131203/p1">ファンクタであそぼう - 非現実的 非日常的 非常識的、非日記。</a></li>
+</ul>
+</div>
+
+    </div>
+  </div>
+
+  <footer id="footer">
+    <div id="footer-wrap">
+      <div class="container">
+        <div class="row icons">
+          <div class="one-third column">
+            <a href="http://335g.github.io">
+              <i class="fa fa-home fa-lg"></i>
+            </a>
+          </div>
+          <div class="one-third column">
+            <a href="http://github.com/335g">
+              <i class="fa fa-github-alt fa-lg"></i>
+            </a>
+          </div>
+          <div class="one-third column">
+            <a href="http://twitter.com/335g">
+              <i class="fa fa-twitter fa-lg"></i>
+            </a>
+          </div>
+        </div>
+        <div class-"row copyright">
+          <div class="copyright">
+              2015 © 335g .
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- highlight.js -->
+  <script src="../js/highlight/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+
+</body>
+</html>
