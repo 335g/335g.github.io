@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>protocol oriented with 継続渡しスタイル</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="../css/skeleton/normalize.css">
+  <link rel="stylesheet" type="text/css" href="../css/skeleton/skeleton.css">
+  <link rel="stylesheet" type="text/css" href="../css/style2.css">
+  <link rel="stylesheet" href="../js/highlight/styles/solarized_dark.css">
+</head>
+
+<body>
+  <div id="contents">
+    <div id="contents-wrap">
+      <div class="post-infos">
+  <div class="posted-date">
+    February 18, 2016
+  </div>
+  <h2 class="post-title">
+    protocol oriented with 継続渡しスタイル
+  </h2>
+</div>
+<div id="post-main" class="pt4">
+  <h3 id="モチベーション">モチベーション</h3>
+<p>protocol (extension)内でenumのパターンマッチをしたい。</p>
+<h3 id="継続渡しスタイル-cps-continuation-passing-style">継続渡しスタイル (CPS: Continuation-passing style)</h3>
+<p>簡単な例として、入力された数字が3の倍数かどうかを判定する関数を用いて処理を分岐することを考えます。</p>
+<pre class="swift"><code>func foo(x: Int) -&gt; Bool {
+	return x % 3 == 0
+}
+
+func main() {
+	switch foo(1) {
+	case true:
+		print(&quot;true&quot;)
+	case false:
+		print(&quot;false&quot;)
+	}
+}</code></pre>
+<p>これを継続渡しスタイルで考えるとこんな感じになります。</p>
+<pre class="swift"><code>func foo2&lt;A&gt;(x: Int, f: Bool -&gt; A) -&gt; A {
+	return f(x % 3 == 0)
+}
+
+func main() {
+	foo2(1){ x in
+		switch x {
+		case true:
+			print(&quot;true&quot;)
+		case false:
+			print(&quot;false&quot;)
+		}
+	}
+}</code></pre>
+<p><code>foo(x: Int) -&gt; Bool</code>の場合、</p>
+<ol style="list-style-type: decimal">
+<li><code>foo</code>に値を渡し<code>Bool</code>値を得て、</li>
+<li>戻り値(<code>Bool</code>)が<code>true</code>か<code>false</code>か判断し、</li>
+<li>戻り値に応じて何かする (ここでは<code>print()</code>)</li>
+</ol>
+<p>という手順になります。一方、 継続渡しスタイル<code>foo2&lt;A&gt;(x: Int, f: Bool -&gt; A) -&gt; A</code>の場合は、</p>
+<ol style="list-style-type: decimal">
+<li><code>foo2</code>に値と関数を渡し、</li>
+<li><code>foo2</code>が<code>Bool</code>値を関数に適用する。</li>
+</ol>
+<p>という手順になります。つまり継続渡しスタイルでは、関数の計算結果を判断するという部分を関数側に押しやってしまっているように見えます。</p>
+<h3 id="継続渡しスタイルのパターンマッチ">継続渡しスタイルのパターンマッチ</h3>
+<p><code>enum</code>のパターンマッチの場合を考えます。つまり、<code>enum</code>をパターンマッチして何か行いたい場合において、パターンマッチ部分を関数側に押しやってしまうわけです。</p>
+<p>具体例として、以下のような<code>Either&lt;A, B&gt;</code>を考えます。</p>
+<pre class="swift"><code>enum Either&lt;L, R&gt; {
+	case Left(L)
+	case Right(R)
+}</code></pre>
+<p><code>Either&lt;L, R&gt;</code>が準拠するprotocol <code>EitehrType</code>を定義し、その中でパターンマッチ用のメソッド<code>either</code>を定義します。</p>
+<pre class="swift"><code>protocol EitherType {
+	typealias LeftType
+	typealias RightType
+
+	func either&lt;A&gt;(@noescape ifLeft ifLeft: LeftType -&gt; A, @noescape ifRight: RightType -&gt; A) -&gt; A
+}
+
+extension Either: EitherType {
+	typealias LeftType = L
+	typealias RightType = R
+
+	func either&lt;A&gt;(@noescape ifLeft ifLeft: L -&gt; A, @noescape ifRight: R -&gt; A) -&gt; A {
+		switch self {
+		case .Left(let x):
+			return ifLeft(x)
+		case .Right(let x):
+			return ifRight(x)
+		}
+	}
+}</code></pre>
+<p>これにより<code>extension EitherType</code>内でパターンマッチが可能になります。</p>
+<pre class="swift"><code>extension EitherType {
+  var right: RightType? {
+		return either(
+			ifLeft: { _ in nil },
+			ifRight: { $0 }
+		)
+	}
+}
+
+let a: Either&lt;Int, Int&gt; = .Left(0)
+a.right // nil
+
+let b: Either&lt;Int, Int&gt; = .Right(0)
+b.right // 0</code></pre>
+<p>これだけだと<code>Either</code>側で実装すればいいんじゃ…と思ってしまうんですが、protocol内でパターンマッチできることで<code>where</code>文に<code>EitherType</code>が出てくる場合にもパターンマッチできるようになります。</p>
+<pre class="swift"><code>extension Array where Element: EitherType {
+	func rights() -&gt; [Element.RightType] {
+		return self
+			.map{ $0.right }
+			.filter{ $0 != nil }
+			.map{ $0! }
+	}
+}
+
+let eithers: [Either&lt;Int, Int&gt;] = [
+  .Left(0),
+  .Right(1),
+  .Left(2),
+  .Left(3),
+  .Right(4)
+]
+eithers.rights() // [1, 4]</code></pre>
+<h3 id="参考">参考</h3>
+<ul>
+<li><a href="http://fumieval.hatenablog.com/entry/2014/02/11/205916">継続渡しなHaskellライフ - モナドとわたしとコモナド</a></li>
+<li><a href="https://github.com/robrix/Either">robrix/Either - github</a></li>
+</ul>
+</div>
+
+    </div>
+  </div>
+
+  <footer id="footer">
+    <div id="footer-wrap">
+      <div class="container">
+        <div class="row icons">
+          <div class="one-third column">
+            <a href="http://335g.github.io">
+              <i class="fa fa-home fa-lg"></i>
+            </a>
+          </div>
+          <div class="one-third column">
+            <a href="http://github.com/335g">
+              <i class="fa fa-github-alt fa-lg"></i>
+            </a>
+          </div>
+          <div class="one-third column">
+            <a href="http://twitter.com/335g">
+              <i class="fa fa-twitter fa-lg"></i>
+            </a>
+          </div>
+        </div>
+        <div class-"row copyright">
+          <div class="copyright">
+              2015 © 335g .
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- highlight.js -->
+  <script src="../js/highlight/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+
+</body>
+</html>
